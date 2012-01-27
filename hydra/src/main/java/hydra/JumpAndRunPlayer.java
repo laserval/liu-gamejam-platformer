@@ -1,6 +1,6 @@
 package hydra;
 
-import org.newdawn.Animation;
+import org.newdawn.slick.Animation;
 import org.newdawn.slick.geom.Vector2f;
 
 public class JumpAndRunPlayer implements JumpAndRunEntity {
@@ -15,5 +15,10 @@ public class JumpAndRunPlayer implements JumpAndRunEntity {
         sprite_ = sprite;
         pos_ = pos;
         
+    }
+    
+    
+    public String toString() {
+        return "player";
     }
 }
