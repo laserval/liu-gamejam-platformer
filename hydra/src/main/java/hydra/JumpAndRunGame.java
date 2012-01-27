@@ -29,7 +29,7 @@ public class JumpAndRunGame {
 	public void update(GameContainer gc, int delta) {
 		
 		for(JumpAndRunEntity entity : entities_) {
-			System.out.println(entity);
+			//System.out.println(entity);
 		}
 		
 	}
