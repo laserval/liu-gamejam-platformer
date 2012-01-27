@@ -6,12 +6,14 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 
+import hydra.snake.SnakeGame;
+
 public class App extends BasicGame {
 	private SnakeGame snakeGame_ = new SnakeGame();;
 	private JumpAndRunGame jumpAndRunGame_ = new JumpAndRunGame();
 	
-	private Rectangle snakeRectangle_ = new Rectangle(0, 0, 400, 900);
-	private Rectangle jumpAndRunRectangle_ = new Rectangle(0, 400, 700, 900);
+	private Rectangle snakeRectangle_ = new Rectangle(0, 0, 900, 400);
+	private Rectangle jumpAndRunRectangle_ = new Rectangle(0, 400, 900, 700);
 	
 	public App() {
 		super("<insert awesome name here>");
