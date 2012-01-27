@@ -4,7 +4,7 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import java.awt.Rectangle;
+import org.newdawn.slick.geom.Rectangle;
 
 public class App extends BasicGame {
 	private SnakeGame snakeGame_ = new SnakeGame();;
@@ -33,8 +33,8 @@ public class App extends BasicGame {
 	}
 	
 	public void init(GameContainer gc) {
-		snakeGame_.init(gc);
-		jumpAndRunGame_.init(gc);
+		snakeGame_.init(gc, snakeRectangle_);
+		jumpAndRunGame_.init(gc, jumpAndRunRectangle_);
 	}
 }
 
