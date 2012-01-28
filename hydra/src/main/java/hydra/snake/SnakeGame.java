@@ -14,10 +14,10 @@ public class SnakeGame implements BaseSubGame {
 	
 	private static final int TILE_SIZE = 20;
 	
-	public static final int DIRECTION_LEFT = 1;
-	public static final int DIRECTION_RIGHT = 2;
-	public static final int DIRECTION_UP = 3;
-	public static final int DIRECTION_DOWN = 4;
+	public static final int DIRECTION_LEFT = 0;
+	public static final int DIRECTION_RIGHT = 1;
+	public static final int DIRECTION_UP = 2;
+	public static final int DIRECTION_DOWN = 3;
 	
 	private int width_;
 	private int height_;
