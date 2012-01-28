@@ -94,7 +94,7 @@ public class JumpAndRunGame implements BaseSubGame {
 			}
 			else {
 				entity.setPosition(startPos.x, startPos.y);
-				entity.setSpeed(0.0f, 0.0f);
+				entity.multiplySpeed(1.0f, 0.0f);
 				
 			}
 		}
@@ -102,7 +102,7 @@ public class JumpAndRunGame implements BaseSubGame {
 	}
 	
 	public void init(GameContainer gc, Rectangle clip) {
-		gravity_ = new Vector2f(0.0f, 500.0f);
+		gravity_ = new Vector2f(0.0f, 700.0f);
 		
 		world_ = new Rectangle(10.0f, 10.0f, clip.getWidth() - 10.0f, clip.getHeight() - 10.0f);
 		

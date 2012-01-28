@@ -60,6 +60,10 @@ public abstract class JumpAndRunEntity {
         return speed_;
     }
     
+    public void multiplySpeed(float x, float y) {
+        speed_.dot(new Vector2f(x, y));
+    }
+    
     public Vector2f getAcc() {
         return acc_;
     }
