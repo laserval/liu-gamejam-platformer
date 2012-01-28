@@ -8,28 +8,31 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
 public class SnakeTileSnakeBody extends SnakeTileSnake {
-	Animation[] bodyAnim = new Animation[10];
+	protected Animation[] bodyAnim = new Animation[10];
 
-	public SnakeTileSnakeBody(int x, int y, Rectangle rect, SnakeTileSnake successor) {
+	public SnakeTileSnakeBody(int x, int y, Rectangle rect, SnakeTileSnake successor, boolean loadTextures) {
 		super(x, y, rect, successor);
 		
 		for (int i = 0; i < 10; i++) {
 			bodyAnim[i] = new Animation(false);
 		}
 		
-		loadAnimation(0, "snake_tile_vertical.jpg");
-		loadAnimation(1, "snake_tile_horizontal.jpg");
-		loadAnimation(2, "snake_tile_up_left.jpg");
-		loadAnimation(3, "snake_tile_up_right.jpg");
-		loadAnimation(4, "snake_tile_down_left.jpg");
-		loadAnimation(5, "snake_tile_down_right.jpg");
-		loadAnimation(6, "snake_tile_tail_vertical_up.jpg");
-		loadAnimation(7, "snake_tile_tail_vertical_down.jpg");
-		loadAnimation(8, "snake_tile_tail_horizontal_left.jpg");
-		loadAnimation(9, "snake_tile_tail_horizontal_right.jpg");
+		if (loadTextures) {
+			loadAnimation(0, "snake_tile_vertical.jpg");
+			loadAnimation(1, "snake_tile_horizontal.jpg");
+			loadAnimation(2, "snake_tile_up_left.jpg");
+			loadAnimation(3, "snake_tile_up_right.jpg");
+			loadAnimation(4, "snake_tile_down_left.jpg");
+			loadAnimation(5, "snake_tile_down_right.jpg");
+			loadAnimation(6, "snake_tile_tail_vertical_up.jpg");
+			loadAnimation(7, "snake_tile_tail_vertical_down.jpg");
+			loadAnimation(8, "snake_tile_tail_horizontal_left.jpg");
+			loadAnimation(9, "snake_tile_tail_horizontal_right.jpg");
+		}
 	}
 	
 	public void loadAnimation(int index, String name) {
+		System.out.println("load anim " + name);
 		Image[] bodyImages = new Image[1];
 
 		// Load background for Snakes body

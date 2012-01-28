@@ -52,12 +52,10 @@ public class SnakeLevel {
 		for (; x < width/2 + 4; x++) {
 			Rectangle rect = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
 			SnakeTileSnake current;
-			System.out.println("x=" + x + " width/2=" + (width/2));
 			if (x == width/2) {
-				System.out.println("new JR");
 				current = new SnakeTileSnakeBodyJR(x, y, rect, last);
 			} else {
-				current = new SnakeTileSnakeBody(x, y, rect, last);
+				current = new SnakeTileSnakeBody(x, y, rect, last, true);
 			}
 			
 			if (last != null) {

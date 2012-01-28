@@ -94,7 +94,7 @@ public abstract class JumpAndRunEntity {
     }
     
     public void impulse(Vector2f v, int delta) {
-        System.out.println(v + " " + delta);
+        //System.out.println(v + " " + delta);
         acc_.add( new Vector2f(v).scale((float)delta*0.001f));
     }
     
