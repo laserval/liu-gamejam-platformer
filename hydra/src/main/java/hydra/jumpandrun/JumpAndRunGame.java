@@ -46,12 +46,11 @@ public class JumpAndRunGame implements BaseSubGame {
 		Input input = gc.getInput();
 		player_.resetMoves();
 
-		if (input.isKeyDown(Input.KEY_W)) {
-			/*
+		/*
 			if(jumpfx.playing() == false){
 				jumpfx.play();
 			}
-			*/
+		*/
 		if (input.isKeyPressed(Input.KEY_W)) {
 			player_.jump();
 		}
