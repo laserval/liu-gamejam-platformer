@@ -8,25 +8,88 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
 public class SnakeTileSnakeBody extends SnakeTileSnake {
-	Image[] bodyImages = new Image[1];
-	Animation bodyAnim = new Animation(false);
+	Animation[] bodyAnim = new Animation[10];
 
 	public SnakeTileSnakeBody(int x, int y, Rectangle rect, SnakeTileSnake successor) {
 		super(x, y, rect, successor);
+		
+		for (int i = 0; i < 10; i++) {
+			bodyAnim[i] = new Animation(false);
+		}
+		
+		loadAnimation(0, "snake_tile_vertical.jpg");
+		loadAnimation(1, "snake_tile_horizontal.jpg");
+		loadAnimation(2, "snake_tile_up_left.jpg");
+		loadAnimation(3, "snake_tile_up_right.jpg");
+		loadAnimation(4, "snake_tile_down_left.jpg");
+		loadAnimation(5, "snake_tile_down_right.jpg");
+		loadAnimation(6, "snake_tile_tail_vertical_up.jpg");
+		loadAnimation(7, "snake_tile_tail_vertical_down.jpg");
+		loadAnimation(8, "snake_tile_tail_horizontal_left.jpg");
+		loadAnimation(9, "snake_tile_tail_horizontal_right.jpg");
+	}
+	
+	public void loadAnimation(int index, String name) {
+		Image[] bodyImages = new Image[1];
 
 		// Load background for Snakes body
 		try {
-			bodyImages[0] = new Image("snake_tile.jpg");
+			bodyImages[0] = new Image(name);
 		} catch(SlickException e) {
 			System.out.println(e);
 			return;
 		}
 
-		bodyAnim.addFrame(bodyImages[0], 1);
+		bodyAnim[index].addFrame(bodyImages[0], 1);
 	}
 
 	public void render(Graphics g) {
-		bodyAnim.draw(clipRect_.getX(), clipRect_.getY());
+		int index = 0;
+		
+		if (successor_ == null) {
+			// tail
+			if (predecessor_.x_ < x_) {
+				// horizontal tail
+				index = 8;
+			} else if (predecessor_.x_ > x_) {
+				index = 9;
+			} else {
+				// vertical tail
+				if (predecessor_.y_ < y_) {
+					index = 6;
+				} else {
+					index = 7;
+				}
+			}
+		} else {
+			if (successor_.y_ == predecessor_.y_) {
+				// vertical body
+				index = 1;
+			} else if (successor_.x_ == predecessor_.x_) {
+				// horizontal body
+				index = 0;
+			} else if (successor_.x_ < predecessor_.x_) {
+				// right
+				if (successor_.y_ < predecessor_.y_) {
+					// top right
+					index = 3;
+				} else {
+					// bottom right
+					index = 5;
+				}
+			} else {
+				// left
+				if (successor_.y_ < predecessor_.y_) {
+					// top left
+					index = 2;
+				} else {
+					// bottom left
+					index = 4;
+				}
+			}
+		}
+		
+		bodyAnim[index].draw(clipRect_.getX(), clipRect_.getY());
 	}
 	
 	public String toString() {
