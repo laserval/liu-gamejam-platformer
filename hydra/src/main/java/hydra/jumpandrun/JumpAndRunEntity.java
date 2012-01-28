@@ -5,6 +5,8 @@ import org.newdawn.slick.Animation;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
 
 public abstract class JumpAndRunEntity {
 
@@ -24,14 +26,14 @@ public abstract class JumpAndRunEntity {
     protected Vector2f acc_;
     
     protected boolean applyPhysics_ = true;
+    protected boolean applyScrolling_ = true;
     
     protected boolean solid_ = true;
     
+    public boolean deadly_ = true;
     
     public boolean collidesWith(JumpAndRunEntity other) {
-        if (!solid_) return false;
-        
-        collisionMask_.setLocation(other.pos_.x, other.pos_.y);
+        if (!solid_ || !other.solid_) return false;
         
         return collisionMask_.intersects(other.collisionMask_);
     }
@@ -83,6 +85,10 @@ public abstract class JumpAndRunEntity {
     public boolean applyPhysics() {
 		return applyPhysics_;
 	}
+	
+	public boolean applyScrolling() {
+		return applyScrolling_;
+	}
     
     public void friction(float f, int delta) {
         if (speed_.length() < 0.001f) {
@@ -104,18 +110,33 @@ public abstract class JumpAndRunEntity {
         acc_.set(0.0f, 0.0f);
     }
     
-    public void draw(Rectangle rect) {
-        // Draw sprite with input coords as offset
-        sprite_.draw(rect.getX() + pos_.x - sprite_.getWidth()/2.0f, 
-                    rect.getY() + pos_.y - sprite_.getHeight());
+    public void draw(Graphics g, Rectangle rect) {
+		// collision area
+		g.setColor(new Color(0, 255, 0));
+		g.fillRect(rect.getX() + collisionMask_.getX(), rect.getY() + collisionMask_.getY(), collisionMask_.getWidth(), collisionMask_.getHeight());
+		
+		// Draw sprite with input coords as offset
+        sprite_.draw(rect.getX() + pos_.x - getWidth()/2.0f, 
+                    rect.getY() + pos_.y - getHeight());
+		
+		// center
+		//g.setColor(new Color(0, 255, 0));
+		// g.fillRect(rect.getX() + pos_.x - 10, rect.getY() + pos_.y - 10, 20, 20);
+		
+        
     }
 
     public void updateSprite(boolean inAir, int delta) {
         if (!inAir) {
-            sprite_.update((int)(speed_.length() * 0.1f * (float)delta));
+            sprite_.update((int)(speed_.length() * 0.05f * (float)delta));
         }
         else {
             sprite_.setCurrentFrame(inAirFrame_);
         }
     }
+    
+    public void update(int delta) {
+		collisionMask_.setLocation(pos_.x - collisionMask_.getWidth() / 2, pos_.y - collisionMask_.getHeight());
+		//System.out.println("pos=" + pos_ + " mask=(" + collisionMask_.getX() + "/" + collisionMask_.getY() + ") " + collisionMask_);
+	}
 }

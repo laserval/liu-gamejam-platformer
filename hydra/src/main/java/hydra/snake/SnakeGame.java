@@ -173,7 +173,7 @@ public class SnakeGame implements BaseSubGame {
 		}
 		
 		SnakeTileSnake succ = curPart.successor_;
-		if (succ == null) {
+		if (succ == null || succ.successor_ == null) {
 			System.out.println("J&R player reached snake ass!");
 			App.instance_.gameOver(true);
 		} else {
