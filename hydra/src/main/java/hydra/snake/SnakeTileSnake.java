@@ -6,6 +6,7 @@ import org.newdawn.slick.geom.Rectangle;
 
 public abstract class SnakeTileSnake extends SnakeTile {
 	private SnakeTileSnake successor_;
+	public SnakeTileSnake predecessor_;
 	
 	public SnakeTileSnake(int x, int y, Rectangle rect, SnakeTileSnake successor) {
 		super(x, y, rect);
@@ -14,6 +15,10 @@ public abstract class SnakeTileSnake extends SnakeTile {
 	
 	public SnakeTileSnake getSuccessor() {
 		return successor_;
+	}
+	
+	public SnakeTileSnake getPredecessor() {
+		return predecessor_;
 	}
 	
 	public void moveRecursive() {
