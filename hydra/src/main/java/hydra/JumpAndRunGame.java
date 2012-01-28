@@ -39,6 +39,7 @@ public class JumpAndRunGame {
 		
 		// Controls
 		Input input = gc.getInput();
+		player_.resetMoves();
 		if (input.isKeyDown(Input.KEY_W)) {
 			player_.jump();
 		}
@@ -54,18 +55,23 @@ public class JumpAndRunGame {
 			
 			Vector2f startPos = entity.getPosition();
 			
+			boolean inAir = world_.getHeight() > entity.getPosition().y + entity.getHeight();
 			
+			if (inAir) {
+				// Apply gravity if in air
+				entity.impulse(gravity_);
+			}
+			else {
+				// Apply friction if on ground
+				entity.friction(0.1f);
+			}
 			// Move
-			entity.move();
+			entity.move(inAir);
 			
 			// Check if inside world boundaries
 			if (world_.contains(entity.getPosition().x + entity.getWidth()/2.0f, 
 				entity.getPosition().y + entity.getHeight())) {
-				// Apply gravity if in air
-				entity.impulse(gravity_);
-				
-				// Apply friction if on ground
-				entity.friction(0.1f);
+					// it is!
 			}
 			else {
 				entity.setPosition(startPos.x, startPos.y);
