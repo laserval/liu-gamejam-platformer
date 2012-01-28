@@ -7,6 +7,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 
 import hydra.snake.SnakeGame;
+import hydra.jumpandrun.JumpAndRunGame;
 
 public class App extends BasicGame {
 	public static App instance_;

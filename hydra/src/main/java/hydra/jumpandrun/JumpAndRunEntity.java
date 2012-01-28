@@ -1,4 +1,4 @@
-package hydra;
+package hydra.jumpandrun;
 
 import org.newdawn.slick.Renderable;
 import org.newdawn.slick.Animation;

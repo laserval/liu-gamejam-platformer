@@ -1,4 +1,4 @@
-package hydra;
+package hydra.jumpandrun;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -14,7 +14,10 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 
-public class JumpAndRunGame {
+
+import hydra.BaseSubGame;
+
+public class JumpAndRunGame implements BaseSubGame {
 	
 	private Vector2f origin_;
 	
