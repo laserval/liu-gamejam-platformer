@@ -18,9 +18,9 @@ public class JumpAndRunPlayer extends JumpAndRunEntity {
         speed_ = new Vector2f(0.0f, 0.0f);
         acc_ = new Vector2f(0.0f, 0.0f);
         
-        jumpImpulse_ = new Vector2f(0.0f, -5.0f);
-        runLeftImpulse_ = new Vector2f(-1.0f, 0.0f);
-        runRightImpulse_ = new Vector2f(1.0f, 0.0f);
+        jumpImpulse_ = new Vector2f(0.0f, -10.0f);
+        runLeftImpulse_ = new Vector2f(-5.0f, 0.0f);
+        runRightImpulse_ = new Vector2f(5.0f, 0.0f);
     }
     
     public void resetMoves() {
@@ -43,6 +43,8 @@ public class JumpAndRunPlayer extends JumpAndRunEntity {
         if (!inAir && jumping_) this.impulse(jumpImpulse_);
         if (!inAir && runningLeft_) this.impulse(runLeftImpulse_);
         if (!inAir && runningRight_) this.impulse(runRightImpulse_);
+        if (inAir && runningLeft_) this.impulse(runLeftImpulse_.scale(0.2f));
+        if (inAir && runningRight_) this.impulse(runRightImpulse_.scale(0.2f));
         super.move(inAir);
     }
     
