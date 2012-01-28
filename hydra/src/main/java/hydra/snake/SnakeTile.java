@@ -27,4 +27,20 @@ public abstract class SnakeTile {
 	public abstract int[] onHeadMovement();
 	
 	public abstract String toString();
+	
+	public boolean isLeftOf(SnakeTile other) {
+		return other.x_ > x_;
+	}
+	
+	public boolean isRightOf(SnakeTile other) {
+		return other.x_ < x_;
+	}
+	
+	public boolean isAbove(SnakeTile other) {
+		return other.y_ > y_;
+	}
+	
+	public boolean isBelow(SnakeTile other) {
+		return other.y_ < y_;
+	}
 }
