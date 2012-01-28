@@ -68,10 +68,11 @@ public class JumpAndRunGame implements BaseSubGame {
 			}
 			else {
 				System.out.println("on ground");
-				entity.updateSprite(delta);
 				// Apply friction if on ground
 				entity.friction(friction_, delta);
 			}
+			// Update animation
+			entity.updateSprite(inAir, delta);
 			// Move
 			entity.move(inAir, delta);
 			
@@ -91,6 +92,7 @@ public class JumpAndRunGame implements BaseSubGame {
 			// Check if outside world boundaries
 			if (!world_.contains(entity.getPosition().x, entity.getPosition().y)) {
 				System.out.println("outside");
+				// Put at closest position inside boundary
 				entity.setPosition(entity.getPosition().x, world_.getY() + world_.getHeight());
 				entity.multiplySpeed(1.0f, 0.0f);
 			}

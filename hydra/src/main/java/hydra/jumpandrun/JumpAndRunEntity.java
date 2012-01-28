@@ -10,6 +10,8 @@ public abstract class JumpAndRunEntity {
 
     protected Animation sprite_;
     
+    protected int inAirFrame_;
+    
     protected Rectangle collisionMask_;
     
     /**
@@ -55,7 +57,6 @@ public abstract class JumpAndRunEntity {
     }
     
     public void setSpeed(float x, float y) {
-        System.out.println("setting speed to " + x + ", " + y);
         speed_.set(x, y);
     }
     
@@ -101,7 +102,12 @@ public abstract class JumpAndRunEntity {
                     rect.getY() + pos_.y - sprite_.getHeight());
     }
 
-    public void updateSprite(int delta) {
-        sprite_.update((int)(speed_.length() * 0.1f * (float)delta));
+    public void updateSprite(boolean inAir, int delta) {
+        if (!inAir) {
+            sprite_.update((int)(speed_.length() * 0.1f * (float)delta));
+        }
+        else {
+            sprite_.setCurrentFrame(inAirFrame_);
+        }
     }
 }
