@@ -17,10 +17,10 @@ public class SnakeTileSnakeHead extends SnakeTileSnake {
 		for (int i = 0; i < 4; i++) {
 			headAnim[i] = new Animation(false);
 		}
-		loadAnimation(0, "head_tile_left.jpg");
-		loadAnimation(1, "head_tile_right.jpg");
-		loadAnimation(2, "head_tile_up.jpg");
-		loadAnimation(3, "head_tile_down.jpg");
+		loadAnimation(0, "head_tile_head_left.jpg");
+		loadAnimation(1, "head_tile_head_right.jpg");
+		loadAnimation(2, "head_tile_head_up.jpg");
+		loadAnimation(3, "head_tile_head_down.jpg");
 	}
 
 	public void loadAnimation(int index, String name) {
