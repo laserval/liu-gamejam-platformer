@@ -24,11 +24,11 @@ public class JumpAndRunPlayer extends JumpAndRunEntity {
         speed_ = new Vector2f(0.0f, 0.0f);
         acc_ = new Vector2f(0.0f, 0.0f);
         
-        jumpImpulse_ = new Vector2f(0.0f, -400.0f);
+        jumpImpulse_ = new Vector2f(0.0f, -600.0f);
         runLeftImpulse_ = new Vector2f(-2500.0f, 0.0f);
         runRightImpulse_ = new Vector2f(2500.0f, 0.0f);
         
-        collisionMask_ = new Rectangle(0.0f, 0.0f, sprite_.getWidth(), sprite_.getHeight());
+        collisionMask_ = new Rectangle(0.0f, 0.f, sprite_.getWidth(), sprite_.getHeight() - 10);
     }
     
     public void resetMoves() {
@@ -62,4 +62,9 @@ public class JumpAndRunPlayer extends JumpAndRunEntity {
     public String toString() {
         return "player";
     }
+    
+    public void update(int delta) {
+		super.update(delta);
+		collisionMask_.setY(collisionMask_.getY() - 10);
+	}
 }

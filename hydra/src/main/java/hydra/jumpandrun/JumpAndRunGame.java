@@ -17,10 +17,13 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
 
+import hydra.App;
 import hydra.BaseSubGame;
 import hydra.snake.SnakeGame;
 
 public class JumpAndRunGame implements BaseSubGame {
+	public static JumpAndRunGame instance_;
+	
 	private JumpAndRunPlayer player_;
 	
 	private List<JumpAndRunEntity> entities_;
@@ -31,13 +34,21 @@ public class JumpAndRunGame implements BaseSubGame {
 	private float friction_ = 0.007f;
 	
 	static Sound jumpfx;
-	private Boolean soundPlaying = false;
+	private boolean soundPlaying = false;
+	
+	public float scrollPixelsPerSecond_ = 150;
+	private float scrollPixelOverlap_ = 0;
+	
+	
+	public JumpAndRunGame() {
+		instance_ = this;
+	}
 	
 	public void render(GameContainer gc, Graphics g, Rectangle clip) {
 		
 		// Render entities
 		for(JumpAndRunEntity entity : entities_) {
-			entity.draw(clip);
+			entity.draw(g, clip);
 		}
 		
 	}
@@ -64,82 +75,94 @@ public class JumpAndRunGame implements BaseSubGame {
 		if (input.isKeyDown(Input.KEY_D)) {
 			player_.right();
 		}
-		// Physics
+		
+		
+		scrollPixelOverlap_ += scrollPixelsPerSecond_ * (delta / 1000.f);;
+		int curScroll = (int)scrollPixelOverlap_;
+		scrollPixelOverlap_ -= curScroll;
+		
+		// scrolling
 		for(JumpAndRunEntity entity : entities_) {
-			if (!entity.applyPhysics()) {
-				continue;
+			if (entity.applyScrolling()) {
+				// scrolling
+				// TODO: Manage collisions here
+				Vector2f newScrollPos = entity.getPosition();
+				newScrollPos.x -= curScroll;
+				entity.setPosition(newScrollPos);
 			}
 			
-			Vector2f startPos = entity.getPosition();
+			entity.update(delta);
+		}
 			
-			boolean inAir = entity.getPosition().y < world_.getY() + world_.getHeight();
+			
+			
+		{
+			Vector2f startPos = player_.getPosition();
+			
+			boolean inAir = player_.getPosition().y < world_.getY() + world_.getHeight();
 			
 			if (inAir) {
 				// Apply gravity if in air
-				entity.impulse(gravity_, delta);
+				player_.impulse(gravity_, delta);
 				//System.out.println("in air");
 			}
 			else {
 				//System.out.println("on ground");
 				// Apply friction if on ground
-				entity.friction(friction_, delta);
+				player_.friction(friction_, delta);
 			}
 			// Update animation
-			entity.updateSprite(inAir, delta);
+			player_.updateSprite(inAir, delta);
 			// Move
-			entity.move(inAir, delta);
+			player_.move(inAir, delta);
 			
 			// Find collisions for this entity
 			for(JumpAndRunEntity otherEntity : entities_) {
-				if (!entity.equals(otherEntity)
-					&& otherEntity.isSolid()) {
-					//System.out.println("Checking collisions with " + otherEntity);
-					if (entity.collidesWith(otherEntity)) {
-						// Move out of collision
-						entity.setPosition(startPos.x, startPos.y);
-						entity.setSpeed(0.0f, 0.0f);
+				if (!player_.equals(otherEntity)) {
+					// System.out.println("Checking collisions between player and " + otherEntity);
+					if (player_.collidesWith(otherEntity)) {
+						System.out.println("Collision!");
+						handleCollision(player_, otherEntity);
 					}
 				}
 			}
 			
 			// Check if outside world boundaries
-			if (!world_.contains(entity.getPosition().x, entity.getPosition().y)) {
+			if (!world_.contains(player_.getPosition().x, player_.getPosition().y)) {
 				//System.out.println("outside");
 				
 				// if player reached one of the sides, move lump inside snake
-				if (entity == player_) {
-					if (entity.getPosition().x < world_.getX()) {
-						// left side
-						SnakeGame.instance_.moveJRBackward();
-					} else if (entity.getPosition().x > world_.getX() + world_.getWidth()) {
-						SnakeGame.instance_.moveJRForward();
-					}
+				if (player_.getPosition().x < world_.getX()) {
+					// left side
+					SnakeGame.instance_.moveJRBackward();
+				} else if (player_.getPosition().x > world_.getX() + world_.getWidth()) {
+					SnakeGame.instance_.moveJRForward();
 				}
 				
 				// Put at closest position inside boundary
-				Vector2f newPos = new Vector2f(entity.getPosition());
-				Vector2f newSpeed = new Vector2f(entity.getSpeed());
-				if (entity.getPosition().x < world_.getX()) {
+				Vector2f newPos = new Vector2f(player_.getPosition());
+				Vector2f newSpeed = new Vector2f(player_.getSpeed());
+				if (player_.getPosition().x < world_.getX()) {
 					newPos.x = world_.getX() + 0.5f;
 					newSpeed.x = 0.0f;
 				}
 				
-				if (entity.getPosition().x > world_.getX() + world_.getWidth()) {
+				if (player_.getPosition().x > world_.getX() + world_.getWidth()) {
 					newPos.x = world_.getX() + world_.getWidth() - 0.5f;
 					newSpeed.x = 0.0f;
 				}
 					
-				if (entity.getPosition().y < world_.getY()) {
+				if (player_.getPosition().y < world_.getY()) {
 					newPos.y = world_.getY();
 					newSpeed.y = 0.0f;
 				}
 				
-				if (entity.getPosition().y > world_.getY() + world_.getHeight()) {
+				if (player_.getPosition().y > world_.getY() + world_.getHeight()) {
 					newPos.y = world_.getY() + world_.getHeight();
 					newSpeed.y = 0.0f;
 				}
-				entity.setPosition(newPos);
-				entity.setSpeed(newSpeed);
+				player_.setPosition(newPos);
+				player_.setSpeed(newSpeed);
 			}
 		}
 		
@@ -184,8 +207,51 @@ public class JumpAndRunGame implements BaseSubGame {
 		}
 		
 		Animation playerAnim = new Animation(playerSpriteSheet, 1000);
-		player_ = new JumpAndRunPlayer(playerAnim, new Vector2f(100.0f, 20.0f));
+		player_ = new JumpAndRunPlayer(playerAnim, new Vector2f(400.0f, 150.0f));
 		
 		entities_.add(player_);
+		
+		// add barrier
+		JumpAndRunEntityInvisibleFixedBarrier barrier = new JumpAndRunEntityInvisibleFixedBarrier(
+				new Vector2f(world_.getX() + world_.getWidth()/2, world_.getY() - 5), 
+				new Rectangle(0, 0, world_.getWidth(), 20));
+		entities_.add(barrier);
+		
+		
+		JumpAndRunObstacle obstacle = new JumpAndRunObstacle(new Vector2f(700, world_.getHeight()), "apple");
+		entities_.add(obstacle);
+	}
+	
+	private void handleCollision(JumpAndRunPlayer player, JumpAndRunEntity other) {
+		if (!other.deadly_) {
+			// disentangle
+			// check on which side the player should be shoved
+			if (other.collisionMask_.contains(player.collisionMask_.getMinX(), player.collisionMask_.getMinY()) && 
+					other.collisionMask_.contains(player.collisionMask_.getMaxX(), player.collisionMask_.getMinY())) {
+				// player jumped into this obstacle from below
+				//System.out.println("jumped in from below");
+				player_.pos_.y += (4 + other.collisionMask_.getMaxY() - player.collisionMask_.getMinY());
+			} else if (other.collisionMask_.contains(player.collisionMask_.getMinX(), player.collisionMask_.getMaxY()) && 
+					other.collisionMask_.contains(player.collisionMask_.getMaxX(), player.collisionMask_.getMaxY())) {
+				// player landed squarely on top of this obstacle
+				//System.out.println("landed on top of it");
+				player_.pos_.y -= (player.collisionMask_.getMaxY() - other.collisionMask_.getMinY());
+			} else if (other.collisionMask_.contains(player.collisionMask_.getMinX(), player.collisionMask_.getMinY()) && 
+					other.collisionMask_.contains(player.collisionMask_.getMinX(), player.collisionMask_.getMaxY())) {
+				// player ran into an obstacle from the right side
+				//System.out.println("from the right side");
+				player_.pos_.x += (5 + other.collisionMask_.getMaxX() - player.collisionMask_.getMinX());
+			} else if (other.collisionMask_.contains(player.collisionMask_.getMaxX(), player.collisionMask_.getMinY()) && 
+					other.collisionMask_.contains(player.collisionMask_.getMaxX(), player.collisionMask_.getMaxY())) {
+				// player ran into obstacle from the left side
+				//System.out.println("from the left side");
+				player_.pos_.x -= (player.collisionMask_.getMaxX() - other.collisionMask_.getMinX());
+			}
+			
+			player_.speed_.set(0, 0);
+		} else {
+			System.out.println("Jump&Run player dies because of collision with obstacle");
+			App.instance_.gameOver(true);
+		}
 	}
 }
