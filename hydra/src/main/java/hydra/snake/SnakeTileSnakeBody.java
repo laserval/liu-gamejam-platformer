@@ -32,7 +32,6 @@ public class SnakeTileSnakeBody extends SnakeTileSnake {
 	}
 	
 	public void loadAnimation(int index, String name) {
-		System.out.println("load anim " + name);
 		Image[] bodyImages = new Image[1];
 
 		// Load background for Snakes body
