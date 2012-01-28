@@ -37,7 +37,7 @@ public class SnakeLevel {
 					// Right
 					tiles[x][y] = new SnakeTileWallRight(x, y, rect);
 
-				} else if (rand_.nextInt(100) == 27) {
+				} else if (rand_.nextInt(80) == 27) {
 					if (rand_.nextInt(2) == 1){ 
 						tiles[x][y] = new SnakeTileFood(x, y, rect);
 					} else {

@@ -11,7 +11,7 @@ import org.newdawn.slick.geom.Rectangle;
 public class SnakeTileFood extends SnakeTile {
 	//private int volume = 10;
 	
-	static Sound fx;
+	Sound fx;
 	Image[] applesImages = new Image[1];
 	Animation appleAnim = new Animation(false);
 	
