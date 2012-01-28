@@ -5,8 +5,8 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.geom.Rectangle;
 
 public class SnakeTileWall extends SnakeTile {
-	public SnakeTileWall(Rectangle rect) {
-		super(rect);
+	public SnakeTileWall(int x, int y, Rectangle rect) {
+		super(x, y, rect);
 		
 		//System.out.println("create wall at x/y/width/height" + clipRect_.getX() + "/" + clipRect_.getY()+ "/" + clipRect_.getWidth()+ "/" + clipRect_.getHeight());
 	}

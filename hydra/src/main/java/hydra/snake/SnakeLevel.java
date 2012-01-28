@@ -6,44 +6,34 @@ import org.newdawn.slick.geom.Rectangle;
 import java.util.Random;
 
 public class SnakeLevel {
-	private static final int TILE_SIZE = 10;
+	private static Random rand_ = new Random();
 	
-	private int width_;
-	private int height_;
-	
-	private SnakeTile[] tiles_;
-	
-	private Random rand_ = new Random();
-	
-	public SnakeLevel(int canvasWidth, int canvasHeight) {
-		width_ = canvasWidth / TILE_SIZE;
-		height_ = canvasHeight / TILE_SIZE;
-		
-		tiles_ = new SnakeTile[width_ * height_];
-		for (int y = 0; y < height_; y++) {
-			for (int x = 0; x < width_; x++) {
-				Rectangle rect = new Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-				if (y == 0 || x == 0 || y == (height_-1) || x == (width_ - 1)) {
-					tiles_[y * width_ + x] = new SnakeTileWall(rect);
+	public static SnakeTileSnakeHead initBasicLevel(SnakeTile[][] tiles, int width, int height, int tileSize) {
+		// create walls and food
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				Rectangle rect = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
+				if (y == 0 || x == 0 || y == (height-1) || x == (width - 1)) {
+					tiles[x][y] = new SnakeTileWall(x, y, rect);
 				} else if (rand_.nextInt(100) == 27) {
-					tiles_[y * width_ + x] = new SnakeTileFood(rect);
-				} else {
-					tiles_[y * width_ + x] = new SnakeTileEmpty(rect);
+					tiles[x][y] = new SnakeTileFood(x, y, rect);
 				}
 			}
 		}
 		
-		
-	}
-	
-	//public abstract void initLevel();
-	//public abstract void ini
-	
-	public void render(Graphics g, Rectangle clip) {
-		for (int y = 0; y < height_; y++) {
-			for (int x = 0; x < width_; x++) {
-				tiles_[y * width_ + x].render(g);
-			}
+		// create snake
+		int y = height/2 - 1;
+		int x = width/2 - 5;
+		SnakeTileSnakeBody last = null;
+		for (; x < width/2 + 4; x++) {
+			Rectangle rect = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
+			tiles[x][y] = last = new SnakeTileSnakeBody(x, y, rect, last);
 		}
+		
+		Rectangle rect = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
+		SnakeTileSnakeHead head = new SnakeTileSnakeHead(x, y, rect, last);
+		tiles[x][y] = head;
+		
+		return head;
 	}
 }

@@ -5,8 +5,8 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.geom.Rectangle;
 
 public class SnakeTileFood extends SnakeTile {
-	public SnakeTileFood(Rectangle rect) {
-		super(rect);
+	public SnakeTileFood(int x, int y, Rectangle rect) {
+		super(x, y, rect);
 	}
 	
 	public void render(Graphics g) {
