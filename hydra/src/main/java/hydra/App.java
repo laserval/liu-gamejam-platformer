@@ -13,7 +13,7 @@ public class App extends BasicGame {
 	private JumpAndRunGame jumpAndRunGame_ = new JumpAndRunGame();
 	
 	private Rectangle snakeRectangle_ = new Rectangle(0, 0, 900, 400);
-	private Rectangle jumpAndRunRectangle_ = new Rectangle(0, 400, 900, 700);
+	private Rectangle jumpAndRunRectangle_ = new Rectangle(0, 400, 900, 300);
 	
 	public App() {
 		super("<insert awesome name here>");
