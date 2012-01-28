@@ -46,18 +46,16 @@ public class SnakeLevel {
 		
 		
 		// create snake
-		int y = height/2 - 1;
-		int x = width/2 - 5;
+		int y = 5;
+		int x = 7;
 		SnakeTileSnake last = null;
-		for (; x < width/2 + 4; x++) {
+		for (; x < 15; x++) {
 			Rectangle rect = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
 			SnakeTileSnake current;
-			System.out.println("x=" + x + " width/2=" + (width/2));
-			if (x == width/2) {
-				System.out.println("new JR");
+			if (x == 10) {
 				current = new SnakeTileSnakeBodyJR(x, y, rect, last);
 			} else {
-				current = new SnakeTileSnakeBody(x, y, rect, last);
+				current = new SnakeTileSnakeBody(x, y, rect, last, true);
 			}
 			
 			if (last != null) {

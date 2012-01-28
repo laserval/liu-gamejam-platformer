@@ -76,10 +76,14 @@ public class JumpAndRunGame implements BaseSubGame {
 			if (inAir) {
 				// Apply gravity if in air
 				entity.impulse(gravity_, delta);
+/*
 				System.out.println("in air");
+*/
 			}
 			else {
+/*
 				System.out.println("on ground");
+*/
 				// Apply friction if on ground
 				entity.friction(friction_, delta);
 			}
@@ -92,7 +96,9 @@ public class JumpAndRunGame implements BaseSubGame {
 			for(JumpAndRunEntity otherEntity : entities_) {
 				if (!entity.equals(otherEntity)
 					&& otherEntity.isSolid()) {
+/*
 					System.out.println("Checking collisions with " + otherEntity);
+*/
 					if (entity.collidesWith(otherEntity)) {
 						// Move out of collision
 						entity.setPosition(startPos.x, startPos.y);
@@ -103,7 +109,9 @@ public class JumpAndRunGame implements BaseSubGame {
 			
 			// Check if outside world boundaries
 			if (!world_.contains(entity.getPosition().x, entity.getPosition().y)) {
+/*
 				System.out.println("outside");
+*/
 				// Put at closest position inside boundary
 				Vector2f newPos = new Vector2f(entity.getPosition());
 				Vector2f newSpeed = new Vector2f(entity.getSpeed());

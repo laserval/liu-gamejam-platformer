@@ -26,7 +26,7 @@ public abstract class SnakeTileSnake extends SnakeTile {
 			successor_.moveRecursive();
 			SnakeGame.instance_.moveTile(successor_, x_, y_);
 		} else if (SnakeGame.instance_.shouldSnakeGrow()) {
-			successor_ = new SnakeTileSnakeBody(x_, y_, clipRect_, null);
+			successor_ = new SnakeTileSnakeBody(x_, y_, clipRect_, null, true);
 			successor_.predecessor_ = this;
 			SnakeGame.instance_.moveTile(successor_, x_, y_);
 			SnakeGame.instance_.onSnakeGrown();
