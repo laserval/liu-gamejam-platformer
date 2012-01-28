@@ -105,7 +105,7 @@ public class JumpAndRunGame implements BaseSubGame {
 		
 		entities_ = new ArrayList<JumpAndRunEntity>();
 		
-		// Load background
+		// Load background for Jumper
 		Image[] backgroundImages = new Image[1];
 		try {
 			backgroundImages[0] = new Image("inside.jpg");
@@ -118,6 +118,7 @@ public class JumpAndRunGame implements BaseSubGame {
 		backgroundAnim.addFrame(backgroundImages[0], 1);
 		JumpAndRunBackground background = new JumpAndRunBackground(backgroundAnim);
 		entities_.add(background);
+		
 		
 		// Load player
 		SpriteSheet playerSpriteSheet;
