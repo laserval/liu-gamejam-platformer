@@ -26,7 +26,7 @@ public class SnakeGame implements BaseSubGame {
 	private SnakeTileSnakeHead snakeHead_;
 	
 	private int moveTimer_;
-	private int moveInterval_ = 2000; // 100 is good
+	private int moveInterval_ = 100; // 100 is good
 	
 	private int snakeGrowth_;
 	
