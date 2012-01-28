@@ -3,18 +3,34 @@ package hydra.snake;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Animation;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
 public class SnakeTileEmpty extends SnakeTile {
+	Image[] tilesImages = new Image[1];
+	Animation tilesAnim = new Animation(false);
+
+
 	public SnakeTileEmpty(int x, int y, Rectangle rect) {
 		super(x, y, rect);
+		
+		// Load background for Snake
+		try {
+			tilesImages[0] = new Image("bg_tile.jpg");
+		} catch(SlickException e) {
+			System.out.println(e);
+			return;
+		}
+
+		tilesAnim.addFrame(tilesImages[0], 1);
 	}
-	
+
 	public void render(Graphics g) {
-		g.setColor(new Color(100, 250, 100));
-		g.fillRect(clipRect_.getX(), clipRect_.getY(), clipRect_.getWidth(), clipRect_.getHeight());
+		tilesAnim.draw(clipRect_.getX(), clipRect_.getY());
 	}
-	
+
 	public int[] onHeadMovement() {
 		return new int[] {x_, y_};
 	}
