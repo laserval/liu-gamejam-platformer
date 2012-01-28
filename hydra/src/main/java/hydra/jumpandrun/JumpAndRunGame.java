@@ -25,6 +25,7 @@ public class JumpAndRunGame implements BaseSubGame {
 	private Rectangle world_;
 	
 	private Vector2f gravity_;
+	private float friction_ = 0.005f;
 	
 	public void render(GameContainer gc, Graphics g, Rectangle clip) {
 		
@@ -49,7 +50,6 @@ public class JumpAndRunGame implements BaseSubGame {
 		if (input.isKeyDown(Input.KEY_D)) {
 			player_.right();
 		}
-		System.out.println((float)delta*0.001f);
 		// Physics
 		for(JumpAndRunEntity entity : entities_) {
 			if (!entity.applyPhysics()) {
@@ -58,7 +58,7 @@ public class JumpAndRunGame implements BaseSubGame {
 			
 			Vector2f startPos = entity.getPosition();
 			
-			boolean inAir = world_.getHeight() > entity.getPosition().y + entity.getHeight();
+			boolean inAir = world_.getX() + world_.getHeight() > entity.getPosition().y + entity.getHeight();
 			
 			if (inAir) {
 				// Apply gravity if in air
@@ -68,7 +68,7 @@ public class JumpAndRunGame implements BaseSubGame {
 			else {
 				System.out.println("on ground");
 				// Apply friction if on ground
-				entity.friction(0.005f, delta);
+				entity.friction(friction_, delta);
 			}
 			System.out.println(entity.getAcc());
 			// Move
@@ -88,13 +88,14 @@ public class JumpAndRunGame implements BaseSubGame {
 			}
 			
 			// Check if inside world boundaries
-			if (world_.contains(entity.getPosition().x + entity.getWidth()/2.0f, 
-				entity.getPosition().y + entity.getHeight())) {
+			if (world_.contains(entity.getPosition().x, entity.getPosition().y)) {
 					// it is!
+					System.out.println("inside");
 			}
 			else {
-				entity.setPosition(startPos.x, startPos.y);
-				entity.multiplySpeed(1.0f, 0.0f);
+				entity.setPosition(entity.getPosition().x,
+									startPos.y);
+				entity.multiplySpeed(0.0f, 0.0f);
 				
 			}
 		}
@@ -102,9 +103,9 @@ public class JumpAndRunGame implements BaseSubGame {
 	}
 	
 	public void init(GameContainer gc, Rectangle clip) {
-		gravity_ = new Vector2f(0.0f, 700.0f);
+		gravity_ = new Vector2f(0.0f, 1000.0f);
 		
-		world_ = new Rectangle(10.0f, 10.0f, clip.getWidth() - 10.0f, clip.getHeight() - 10.0f);
+		world_ = new Rectangle(10.0f, 10.0f, clip.getWidth() - 20.0f, clip.getHeight() - 20.0f);
 		
 		entities_ = new ArrayList<JumpAndRunEntity>();
 		
