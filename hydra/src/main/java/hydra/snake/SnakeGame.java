@@ -4,6 +4,8 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Transform;
+import org.newdawn.slick.Music;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Input;
 
 import hydra.BaseSubGame;
@@ -34,9 +36,18 @@ public class SnakeGame implements BaseSubGame {
 	public int currentDirection_ = DIRECTION_RIGHT;
 	public int lastDirection_ = DIRECTION_RIGHT;
 	
+	private Music backgroundMusic;
 	
 	public SnakeGame() {
 		instance_ = this;
+		try {
+			backgroundMusic = new Music("Intesties.ogg");
+		} catch(SlickException e) {
+			System.out.println(e);
+			return;
+		}
+		
+		backgroundMusic.loop();
 	}
 	
 	public void render(GameContainer gc, Graphics g, Rectangle clip) {
