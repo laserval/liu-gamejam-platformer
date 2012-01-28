@@ -8,6 +8,7 @@ import org.newdawn.slick.Input;
 
 import hydra.BaseSubGame;
 import hydra.App;
+import hydra.jumpandrun.JumpAndRunGame;
 
 public class SnakeGame implements BaseSubGame {
 	public static SnakeGame instance_;
@@ -116,6 +117,7 @@ public class SnakeGame implements BaseSubGame {
 	
 	public void growSnake(int length) {
 		snakeGrowth_ += length;
+		JumpAndRunGame.instance_.spawnApple();
 	}
 	
 	public boolean shouldSnakeGrow() {

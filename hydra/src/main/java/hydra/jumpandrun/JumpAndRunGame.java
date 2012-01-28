@@ -39,6 +39,9 @@ public class JumpAndRunGame implements BaseSubGame {
 	public float scrollPixelsPerSecond_ = 150;
 	private float scrollPixelOverlap_ = 0;
 	
+	private int freezePhysicsTimeout_ = 0;
+	private int freezePhysicsInterval_ = 4000;
+	
 	
 	public JumpAndRunGame() {
 		instance_ = this;
@@ -55,25 +58,27 @@ public class JumpAndRunGame implements BaseSubGame {
 	
 	public void update(GameContainer gc, int delta) {
 		
-		// Controls
-		Input input = gc.getInput();
-		player_.resetMoves();
+		if (freezePhysicsTimeout_ <= 0) {
+			// Controls
+			Input input = gc.getInput();
+			player_.resetMoves();
 
-		if (input.isKeyPressed(Input.KEY_W)) {
-			if (soundPlaying == false){
-				jumpfx.play(1, 3);
-				soundPlaying = true;
+			if (input.isKeyPressed(Input.KEY_W)) {
+				if (soundPlaying == false){
+					jumpfx.play(1, 3);
+					soundPlaying = true;
+				}
+				player_.jump();
 			}
-			player_.jump();
-		}
-		if (!input.isKeyPressed(input.KEY_W)) {
-			soundPlaying = false;
-		}
-		if (input.isKeyDown(Input.KEY_A)) {
-			player_.left();
-		}
-		if (input.isKeyDown(Input.KEY_D)) {
-			player_.right();
+			if (!input.isKeyPressed(input.KEY_W)) {
+				soundPlaying = false;
+			}
+			if (input.isKeyDown(Input.KEY_A)) {
+				player_.left();
+			}
+			if (input.isKeyDown(Input.KEY_D)) {
+				player_.right();
+			}
 		}
 		
 		
@@ -81,8 +86,15 @@ public class JumpAndRunGame implements BaseSubGame {
 		int curScroll = (int)scrollPixelOverlap_;
 		scrollPixelOverlap_ -= curScroll;
 		
+		ArrayList<JumpAndRunEntity> deleteList = new ArrayList();
+		
 		// scrolling
 		for(JumpAndRunEntity entity : entities_) {
+			if (entity.pos_ != null && entity.pos_.x < -1000) {
+				deleteList.add(entity);
+				continue;
+			}
+			
 			if (entity.applyScrolling()) {
 				// scrolling
 				// TODO: Manage collisions here
@@ -93,79 +105,88 @@ public class JumpAndRunGame implements BaseSubGame {
 			
 			entity.update(delta);
 		}
-			
-			
-			
-		{
-			Vector2f startPos = player_.getPosition();
-			
-			boolean inAir = player_.getPosition().y < world_.getY() + world_.getHeight();
-			
-			if (inAir) {
-				// Apply gravity if in air
-				player_.impulse(gravity_, delta);
-				//System.out.println("in air");
-			}
-			else {
-				//System.out.println("on ground");
-				// Apply friction if on ground
-				player_.friction(friction_, delta);
-			}
-			// Update animation
-			player_.updateSprite(inAir, delta);
-			// Move
-			player_.move(inAir, delta);
-			
-			// Find collisions for this entity
-			for(JumpAndRunEntity otherEntity : entities_) {
-				if (!player_.equals(otherEntity)) {
-					// System.out.println("Checking collisions between player and " + otherEntity);
-					if (player_.collidesWith(otherEntity)) {
-						System.out.println("Collision!");
-						handleCollision(player_, otherEntity);
-					}
-				}
+		
+		for (JumpAndRunEntity entity : deleteList) {
+			entities_.remove(entity);
+		}
+		
+		if (freezePhysicsTimeout_ > 0) {
+			freezePhysicsTimeout_ -= delta;
+			if (freezePhysicsTimeout_ < 0) {
+				freezePhysicsTimeout_ = 0;
 			}
 			
-			// Check if outside world boundaries
-			if (!world_.contains(player_.getPosition().x, player_.getPosition().y)) {
-				//System.out.println("outside");
-				
-				// if player reached one of the sides, move lump inside snake
-				if (player_.getPosition().x < world_.getX()) {
-					// left side
-					SnakeGame.instance_.moveJRBackward();
-				} else if (player_.getPosition().x > world_.getX() + world_.getWidth()) {
-					SnakeGame.instance_.moveJRForward();
+			return;
+		}
+			
+		Vector2f startPos = player_.getPosition();
+		
+		boolean inAir = player_.getPosition().y < world_.getY() + world_.getHeight();
+		
+		if (inAir) {
+			// Apply gravity if in air
+			player_.impulse(gravity_, delta);
+			//System.out.println("in air");
+		}
+		else {
+			//System.out.println("on ground");
+			// Apply friction if on ground
+			player_.friction(friction_, delta);
+		}
+		// Update animation
+		player_.updateSprite(inAir, delta);
+		// Move
+		player_.move(inAir, delta);
+		
+		// Find collisions for this entity
+		for(JumpAndRunEntity otherEntity : entities_) {
+			if (!player_.equals(otherEntity)) {
+				// System.out.println("Checking collisions between player and " + otherEntity);
+				if (player_.collidesWith(otherEntity)) {
+					System.out.println("Collision!");
+					handleCollision(player_, otherEntity);
 				}
-				
-				// Put at closest position inside boundary
-				Vector2f newPos = new Vector2f(player_.getPosition());
-				Vector2f newSpeed = new Vector2f(player_.getSpeed());
-				if (player_.getPosition().x < world_.getX()) {
-					newPos.x = world_.getX() + 0.5f;
-					newSpeed.x = 0.0f;
-				}
-				
-				if (player_.getPosition().x > world_.getX() + world_.getWidth()) {
-					newPos.x = world_.getX() + world_.getWidth() - 0.5f;
-					newSpeed.x = 0.0f;
-				}
-					
-				if (player_.getPosition().y < world_.getY()) {
-					newPos.y = world_.getY();
-					newSpeed.y = 0.0f;
-				}
-				
-				if (player_.getPosition().y > world_.getY() + world_.getHeight()) {
-					newPos.y = world_.getY() + world_.getHeight();
-					newSpeed.y = 0.0f;
-				}
-				player_.setPosition(newPos);
-				player_.setSpeed(newSpeed);
 			}
 		}
 		
+		// Check if outside world boundaries
+		if (!world_.contains(player_.getPosition().x, player_.getPosition().y)) {
+			//System.out.println("outside");
+			
+			// if player reached one of the sides, move lump inside snake
+			if (player_.getPosition().x < world_.getX()) {
+				// left side
+				SnakeGame.instance_.moveJRBackward();
+			} else if (player_.getPosition().x > world_.getX() + world_.getWidth()) {
+				SnakeGame.instance_.moveJRForward();
+				freezePhysicsTimeout_ = freezePhysicsInterval_;
+			}
+			
+			// Put at closest position inside boundary
+			Vector2f newPos = new Vector2f(player_.getPosition());
+			Vector2f newSpeed = new Vector2f(player_.getSpeed());
+			if (player_.getPosition().x < world_.getX()) {
+				newPos.x = world_.getX() + 0.5f;
+				newSpeed.x = 0.0f;
+			}
+			
+			if (player_.getPosition().x > world_.getX() + world_.getWidth()) {
+				newPos.x = world_.getX() + world_.getWidth() - 0.5f;
+				newSpeed.x = 0.0f;
+			}
+				
+			if (player_.getPosition().y < world_.getY()) {
+				newPos.y = world_.getY();
+				newSpeed.y = 0.0f;
+			}
+			
+			if (player_.getPosition().y > world_.getY() + world_.getHeight()) {
+				newPos.y = world_.getY() + world_.getHeight();
+				newSpeed.y = 0.0f;
+			}
+			player_.setPosition(newPos);
+			player_.setSpeed(newSpeed);
+		}
 	}
 	
 	public void init(GameContainer gc, Rectangle clip) {
@@ -216,10 +237,6 @@ public class JumpAndRunGame implements BaseSubGame {
 				new Vector2f(world_.getX() + world_.getWidth()/2, world_.getY() - 5), 
 				new Rectangle(0, 0, world_.getWidth(), 20));
 		entities_.add(barrier);
-		
-		
-		JumpAndRunObstacle obstacle = new JumpAndRunObstacle(new Vector2f(700, world_.getHeight()), "apple");
-		entities_.add(obstacle);
 	}
 	
 	private void handleCollision(JumpAndRunPlayer player, JumpAndRunEntity other) {
@@ -251,7 +268,12 @@ public class JumpAndRunGame implements BaseSubGame {
 			player_.speed_.set(0, 0);
 		} else {
 			System.out.println("Jump&Run player dies because of collision with obstacle");
-			App.instance_.gameOver(true);
+			// App.instance_.gameOver(true);
 		}
+	}
+	
+	public void spawnApple() {
+		JumpAndRunObstacle obstacle = new JumpAndRunObstacle(new Vector2f(1000, world_.getHeight()), "apple");
+		entities_.add(obstacle);
 	}
 }
