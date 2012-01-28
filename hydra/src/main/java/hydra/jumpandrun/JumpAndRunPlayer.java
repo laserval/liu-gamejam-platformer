@@ -17,13 +17,15 @@ public class JumpAndRunPlayer extends JumpAndRunEntity {
     
     public JumpAndRunPlayer(Animation sprite, Vector2f pos) {
         sprite_ = sprite;
+        sprite_.setAutoUpdate(false);
+        
         pos_ = pos;
         speed_ = new Vector2f(0.0f, 0.0f);
         acc_ = new Vector2f(0.0f, 0.0f);
         
-        jumpImpulse_ = new Vector2f(0.0f, -5000.0f);
-        runLeftImpulse_ = new Vector2f(-1750.0f, 0.0f);
-        runRightImpulse_ = new Vector2f(1750.0f, 0.0f);
+        jumpImpulse_ = new Vector2f(0.0f, -12000.0f);
+        runLeftImpulse_ = new Vector2f(-3000.0f, 0.0f);
+        runRightImpulse_ = new Vector2f(3000.0f, 0.0f);
         
         collisionMask_ = new Rectangle(0.0f, 0.0f, sprite_.getWidth(), sprite_.getHeight());
     }

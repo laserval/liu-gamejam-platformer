@@ -86,7 +86,7 @@ public abstract class JumpAndRunEntity {
     
     public void impulse(Vector2f v, int delta) {
         System.out.println(v + " " + delta);
-        acc_.add(new Vector2f(v).scale((float)delta*0.001f));
+        acc_.add( new Vector2f(v).scale((float)delta*0.001f));
     }
     
     public void move(boolean inAir, int delta) {
@@ -101,4 +101,7 @@ public abstract class JumpAndRunEntity {
                     rect.getY() + pos_.y - sprite_.getHeight());
     }
 
+    public void updateSprite(int delta) {
+        sprite_.update((int)(speed_.length() * 0.1f * (float)delta));
+    }
 }
