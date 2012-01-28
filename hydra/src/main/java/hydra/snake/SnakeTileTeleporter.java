@@ -37,4 +37,8 @@ public class SnakeTileTeleporter extends SnakeTile {
 		other_ = tele;
 		tele.other_ = this;
 	}
+	
+	public String toString() {
+		return "teleporter";
+	}
 }

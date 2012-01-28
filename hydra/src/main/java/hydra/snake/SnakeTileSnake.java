@@ -5,7 +5,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.geom.Rectangle;
 
 public abstract class SnakeTileSnake extends SnakeTile {
-	private SnakeTileSnake successor_;
+	public SnakeTileSnake successor_;
 	public SnakeTileSnake predecessor_;
 	
 	public SnakeTileSnake(int x, int y, Rectangle rect, SnakeTileSnake successor) {
@@ -27,6 +27,7 @@ public abstract class SnakeTileSnake extends SnakeTile {
 			SnakeGame.instance_.moveTile(successor_, x_, y_);
 		} else if (SnakeGame.instance_.shouldSnakeGrow()) {
 			successor_ = new SnakeTileSnakeBody(x_, y_, clipRect_, null);
+			successor_.predecessor_ = this;
 			SnakeGame.instance_.moveTile(successor_, x_, y_);
 			SnakeGame.instance_.onSnakeGrown();
 		} else {

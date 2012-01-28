@@ -23,4 +23,8 @@ public class SnakeTileWall extends SnakeTile {
 		SnakeGame.instance_.onCrash();
 		return new int[] {x_, y_};
 	}
+	
+	public String toString() {
+		return "wall";
+	}
 }

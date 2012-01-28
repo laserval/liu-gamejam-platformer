@@ -13,4 +13,8 @@ public class SnakeTileSnakeBody extends SnakeTileSnake {
 		g.setColor(new Color(150, 150, 0));
 		g.fillOval(clipRect_.getX(), clipRect_.getY(), clipRect_.getWidth(), clipRect_.getHeight());
 	}
+	
+	public String toString() {
+		return "body";
+	}
 }
