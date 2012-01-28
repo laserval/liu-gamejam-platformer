@@ -44,7 +44,7 @@ public class SnakeTileFood extends SnakeTile {
 	public int[] onHeadMovement(){
 		// Collision with food
 		playingSound();
-		SnakeGame.instance_.growSnake(2);
+		SnakeGame.instance_.growSnake(2, "apple");
 		return new int[] {x_, y_};
 	}
 

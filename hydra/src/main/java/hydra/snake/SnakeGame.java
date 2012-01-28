@@ -10,6 +10,7 @@ import org.newdawn.slick.Input;
 
 import hydra.BaseSubGame;
 import hydra.App;
+import hydra.jumpandrun.JumpAndRunGame;
 
 public class SnakeGame implements BaseSubGame {
 	public static SnakeGame instance_;
@@ -125,8 +126,9 @@ public class SnakeGame implements BaseSubGame {
 		tiles_[x][y] = new SnakeTileEmpty(x, y, new Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 	}
 	
-	public void growSnake(int length) {
+	public void growSnake(int length, String type) {
 		snakeGrowth_ += length;
+		JumpAndRunGame.instance_.spawnObject(type);
 	}
 	
 	public boolean shouldSnakeGrow() {
