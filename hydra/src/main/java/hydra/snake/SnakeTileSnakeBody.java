@@ -61,31 +61,35 @@ public class SnakeTileSnakeBody extends SnakeTileSnake {
 					index = 7;
 				}
 			}
-		} else {
-			if (successor_.y_ == predecessor_.y_) {
+		} else if (successor_.y_ == predecessor_.y_) {
 				// vertical body
 				index = 1;
-			} else if (successor_.x_ == predecessor_.x_) {
+		} else if (successor_.x_ == predecessor_.x_) {
 				// horizontal body
 				index = 0;
-			} else if (successor_.x_ < predecessor_.x_) {
-				// right
-				if (successor_.y_ < predecessor_.y_) {
-					// top right
-					index = 3;
-				} else {
-					// bottom right
-					index = 5;
-				}
+		} else if (successor_.isLeftOf(this)) {
+			if (predecessor_.isAbove(this)) {
+				index = 2;
 			} else {
-				// left
-				if (successor_.y_ < predecessor_.y_) {
-					// top left
-					index = 2;
-				} else {
-					// bottom left
-					index = 4;
-				}
+				index = 4;
+			}
+		} else if (successor_.isRightOf(this)) {
+			if (predecessor_.isAbove(this)) {
+				index = 3;
+			} else {
+				index = 5;
+			}
+		} else if (successor_.isAbove(this)) {
+			if (predecessor_.isLeftOf(this)) {
+				index = 2;
+			} else {
+				index = 3;
+			}
+		} else if (successor_.isBelow(this)) {
+			if (predecessor_.isLeftOf(this)) {
+				index = 4;
+			} else {
+				index = 5;
 			}
 		}
 		
