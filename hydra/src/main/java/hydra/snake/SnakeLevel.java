@@ -1,5 +1,7 @@
 package hydra.snake;
 
+import java.util.Random;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 
@@ -36,7 +38,11 @@ public class SnakeLevel {
 					tiles[x][y] = new SnakeTileWallRight(x, y, rect);
 
 				} else if (rand_.nextInt(100) == 27) {
-					tiles[x][y] = new SnakeTileFood(x, y, rect);
+					if (rand_.nextInt(2) == 1){ 
+						tiles[x][y] = new SnakeTileFood(x, y, rect);
+					} else {
+						tiles[x][y] = new SnakeTileRat(x, y, rect);
+					}
 				} else {
 					tiles[x][y] = new SnakeTileEmpty(x, y, rect);
 				}

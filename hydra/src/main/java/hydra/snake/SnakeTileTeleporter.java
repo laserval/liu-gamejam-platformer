@@ -2,18 +2,31 @@ package hydra.snake;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Animation;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
 public class SnakeTileTeleporter extends SnakeTile {
 	private SnakeTileTeleporter other_;
+	Image[] teleportImages = new Image[1];
+	Animation teleportAnim = new Animation(false);
 	
 	public SnakeTileTeleporter(int x, int y, Rectangle rect) {
 		super(x, y, rect);
+		
+		try {
+			teleportImages[0] = new Image("portal.jpg");
+		} catch(SlickException e) {
+			System.out.println(e);
+			return;
+		}
+
+		teleportAnim.addFrame(teleportImages[0], 1);
 	}
 	
 	public void render(Graphics g) {
-		g.setColor(new Color(220, 0, 0));
-		g.fillRect(clipRect_.getX(), clipRect_.getY(), clipRect_.getWidth(), clipRect_.getHeight());
+		teleportAnim.draw(clipRect_.getX(), clipRect_.getY());
 	}
 	
 	public int[] onHeadMovement() {
