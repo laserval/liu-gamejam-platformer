@@ -111,7 +111,7 @@ public class JumpAndRunGame implements BaseSubGame {
 		// Load background
 		Image[] backgroundImages = new Image[1];
 		try {
-			backgroundImages[0] = new Image("background.png");
+			backgroundImages[0] = new Image("inside.jpg");
 		} catch(SlickException e) {
 			System.out.println(e);
 			return;
