@@ -47,7 +47,7 @@ public class SnakeLevel {
 		int y = height/2 - 1;
 		int x = width/2 - 5;
 		SnakeTileSnakeBody last = null;
-		for (; x < width/2 + 14; x++) {
+		for (; x < width/2 + 4; x++) {
 			Rectangle rect = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
 			tiles[x][y] = last = new SnakeTileSnakeBody(x, y, rect, last);
 		}
