@@ -29,9 +29,16 @@ public class JumpAndRunBackground extends JumpAndRunEntity {
     }
     
     public void update(int delta) {
-		offset_ += JumpAndRunGame.instance_.scrollPixelsPerSecond_ * (delta / 1000.f);
-		if (offset_ >= sprite_.getWidth()) {
-			offset_ -= sprite_.getWidth();
+		if (JumpAndRunGame.instance_.reverseScrolling_) {
+			offset_ -= JumpAndRunGame.instance_.scrollPixelsPerSecond_ * (delta / 1000.f);
+			if (offset_ <= sprite_.getWidth()) {
+				offset_ += sprite_.getWidth();
+			}
+		} else {
+			offset_ += JumpAndRunGame.instance_.scrollPixelsPerSecond_ * (delta / 1000.f);
+			if (offset_ >= sprite_.getWidth()) {
+				offset_ -= sprite_.getWidth();
+			}
 		}
 	}
 }

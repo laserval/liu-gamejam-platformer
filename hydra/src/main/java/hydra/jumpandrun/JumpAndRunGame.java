@@ -40,7 +40,8 @@ public class JumpAndRunGame implements BaseSubGame {
 	private float scrollPixelOverlap_ = 0;
 	
 	private int freezePhysicsTimeout_ = 0;
-	private int freezePhysicsInterval_ = 4000;
+	private int freezePhysicsInterval_ = 1000;
+	public boolean reverseScrolling_ = false;
 	
 	
 	public JumpAndRunGame() {
@@ -98,7 +99,11 @@ public class JumpAndRunGame implements BaseSubGame {
 				// scrolling
 				// TODO: Manage collisions here
 				Vector2f newScrollPos = entity.getPosition();
-				newScrollPos.x -= curScroll;
+				if (reverseScrolling_) {
+					newScrollPos.x += curScroll;
+				} else {
+					newScrollPos.x -= curScroll;
+				}
 				entity.setPosition(newScrollPos);
 			}
 			
@@ -111,8 +116,10 @@ public class JumpAndRunGame implements BaseSubGame {
 		
 		if (freezePhysicsTimeout_ > 0) {
 			freezePhysicsTimeout_ -= delta;
-			if (freezePhysicsTimeout_ < 0) {
+			if (freezePhysicsTimeout_ <= 0) {
 				freezePhysicsTimeout_ = 0;
+				reverseScrolling_ = false;
+				scrollPixelsPerSecond_ /= 4;
 			}
 			
 			return;
@@ -156,29 +163,20 @@ public class JumpAndRunGame implements BaseSubGame {
 			if (player_.getPosition().x < world_.getX()) {
 				// left side
 				SnakeGame.instance_.moveJRBackward();
+				freezePhysicsTimeout_ = freezePhysicsInterval_;
+				reverseScrolling_ = true;
+				scrollPixelsPerSecond_ *= 4;
 			} else if (player_.getPosition().x > world_.getX() + world_.getWidth()) {
 				SnakeGame.instance_.moveJRForward();
 				freezePhysicsTimeout_ = freezePhysicsInterval_;
+				scrollPixelsPerSecond_ *= 4;
 			}
 			
 			// Put at closest position inside boundary
 			Vector2f newPos = new Vector2f(player_.getPosition());
 			Vector2f newSpeed = new Vector2f(player_.getSpeed());
-			if (player_.getPosition().x < world_.getX()) {
-				newPos.x = world_.getX() + 0.5f;
-				newSpeed.x = 0.0f;
-			}
 			
-			if (player_.getPosition().x > world_.getX() + world_.getWidth()) {
-				newPos.x = world_.getX() + world_.getWidth() - 0.5f;
-				newSpeed.x = 0.0f;
-			}
-				
-			if (player_.getPosition().y < world_.getY()) {
-				newPos.y = world_.getY();
-				newSpeed.y = 0.0f;
-			}
-			
+			// can't fall through the ground
 			if (player_.getPosition().y > world_.getY() + world_.getHeight()) {
 				newPos.y = world_.getY() + world_.getHeight();
 				newSpeed.y = 0.0f;
@@ -246,28 +244,29 @@ public class JumpAndRunGame implements BaseSubGame {
 					other.collisionMask_.contains(player.collisionMask_.getMaxX(), player.collisionMask_.getMinY())) {
 				// player jumped into this obstacle from below
 				//System.out.println("jumped in from below");
-				player_.pos_.y += (4 + other.collisionMask_.getMaxY() - player.collisionMask_.getMinY());
+				player.pos_.y += (4 + other.collisionMask_.getMaxY() - player.collisionMask_.getMinY());
 			} else if (other.collisionMask_.contains(player.collisionMask_.getMinX(), player.collisionMask_.getMaxY()) && 
 					other.collisionMask_.contains(player.collisionMask_.getMaxX(), player.collisionMask_.getMaxY())) {
 				// player landed squarely on top of this obstacle
 				//System.out.println("landed on top of it");
-				player_.pos_.y -= (player.collisionMask_.getMaxY() - other.collisionMask_.getMinY());
+				player.pos_.y -= (player.collisionMask_.getMaxY() - other.collisionMask_.getMinY());
 			} else if (other.collisionMask_.contains(player.collisionMask_.getMinX(), player.collisionMask_.getMinY()) && 
 					other.collisionMask_.contains(player.collisionMask_.getMinX(), player.collisionMask_.getMaxY())) {
 				// player ran into an obstacle from the right side
 				//System.out.println("from the right side");
-				player_.pos_.x += (5 + other.collisionMask_.getMaxX() - player.collisionMask_.getMinX());
+				player.pos_.x += (5 + other.collisionMask_.getMaxX() - player.collisionMask_.getMinX());
 			} else if (other.collisionMask_.contains(player.collisionMask_.getMaxX(), player.collisionMask_.getMinY()) && 
 					other.collisionMask_.contains(player.collisionMask_.getMaxX(), player.collisionMask_.getMaxY())) {
 				// player ran into obstacle from the left side
 				//System.out.println("from the left side");
-				player_.pos_.x -= (player.collisionMask_.getMaxX() - other.collisionMask_.getMinX());
+				player.pos_.x -= (player.collisionMask_.getMaxX() - other.collisionMask_.getMinX());
 			}
 			
 			player_.speed_.set(0, 0);
 		} else {
 			System.out.println("Jump&Run player dies because of collision with obstacle");
-			// App.instance_.gameOver(true);
+			SnakeGame.instance_.moveJRBackward();
+			player_.pos_.x += (10 + other.collisionMask_.getMaxX() - player.collisionMask_.getMinX());
 		}
 	}
 	
