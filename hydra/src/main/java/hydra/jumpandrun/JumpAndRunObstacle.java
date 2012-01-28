@@ -34,21 +34,24 @@ public class JumpAndRunObstacle extends JumpAndRunEntity {
 			
 			sprite_ = obstacleAnim;
 			collisionMask_ = new Rectangle(0, 0, 130, 120);
-		} else if (type.equals("mouse")) {
+		} else if (type.equals("rat")) {
+			Image[] obstacleImages = new Image[1];
+			try {
+				obstacleImages[0] = new Image("obstacle_mouse.png");
+			} catch(SlickException e) {
+				System.out.println(e);
+				return;
+			}
+			
+			Animation obstacleAnim = new Animation(false);
+			obstacleAnim.addFrame(obstacleImages[0], 1);
+			
+			sprite_ = obstacleAnim;
+			collisionMask_ = new Rectangle(0, 0, 145, 130);
 		}
 	}
     
     public String toString() {
         return "deadly obstacle";
     }
-    
-/*
-    public float getWidth() {
-		return collisionMask_.getWidth();
-	}
-	
-	public float getHeight() {
-		return collisionMask_.getHeight();
-	}
-*/
 }	

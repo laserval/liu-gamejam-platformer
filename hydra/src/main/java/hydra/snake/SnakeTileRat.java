@@ -44,7 +44,7 @@ public class SnakeTileRat extends SnakeTile {
 	public int[] onHeadMovement(){
 		// Collision with food
 		playingSound();
-		SnakeGame.instance_.growSnake(2);
+		SnakeGame.instance_.growSnake(2, "rat");
 		return new int[] {x_, y_};
 	}
 

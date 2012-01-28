@@ -54,6 +54,8 @@ public class JumpAndRunGame implements BaseSubGame {
 		for(JumpAndRunEntity entity : entities_) {
 			entity.draw(g, clip);
 		}
+		
+		player_.draw(g, clip);
 	}
 	
 	public void update(GameContainer gc, int delta) {
@@ -270,8 +272,8 @@ public class JumpAndRunGame implements BaseSubGame {
 		}
 	}
 	
-	public void spawnApple() {
-		JumpAndRunObstacle obstacle = new JumpAndRunObstacle(new Vector2f(1000, world_.getHeight()), "apple");
+	public void spawnObject(String type) {
+		JumpAndRunObstacle obstacle = new JumpAndRunObstacle(new Vector2f(1000, world_.getHeight() + 5), type);
 		entities_.add(obstacle);
 	}
 }
