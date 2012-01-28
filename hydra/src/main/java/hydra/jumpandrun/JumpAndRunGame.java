@@ -10,9 +10,11 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.Sound;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SpriteSheet;
 
 
 import hydra.BaseSubGame;
@@ -25,7 +27,9 @@ public class JumpAndRunGame implements BaseSubGame {
 	private Rectangle world_;
 	
 	private Vector2f gravity_;
-	private float friction_ = 0.005f;
+	private float friction_ = 0.007f;
+	
+	static Sound jumpfx;
 	
 	public void render(GameContainer gc, Graphics g, Rectangle clip) {
 		
@@ -41,7 +45,13 @@ public class JumpAndRunGame implements BaseSubGame {
 		// Controls
 		Input input = gc.getInput();
 		player_.resetMoves();
-		if (input.isKeyDown(Input.KEY_W)) {
+
+		/*
+			if(jumpfx.playing() == false){
+				jumpfx.play();
+			}
+		*/
+		if (input.isKeyPressed(Input.KEY_W)) {
 			player_.jump();
 		}
 		if (input.isKeyDown(Input.KEY_A)) {
@@ -58,7 +68,7 @@ public class JumpAndRunGame implements BaseSubGame {
 			
 			Vector2f startPos = entity.getPosition();
 			
-			boolean inAir = world_.getX() + world_.getHeight() > entity.getPosition().y + entity.getHeight();
+			boolean inAir = entity.getPosition().y < world_.getY() + world_.getHeight();
 			
 			if (inAir) {
 				// Apply gravity if in air
@@ -70,7 +80,8 @@ public class JumpAndRunGame implements BaseSubGame {
 				// Apply friction if on ground
 				entity.friction(friction_, delta);
 			}
-			System.out.println(entity.getAcc());
+			// Update animation
+			entity.updateSprite(inAir, delta);
 			// Move
 			entity.move(inAir, delta);
 			
@@ -87,22 +98,25 @@ public class JumpAndRunGame implements BaseSubGame {
 				}
 			}
 			
-			// Check if inside world boundaries
-			if (world_.contains(entity.getPosition().x, entity.getPosition().y)) {
-					// it is!
-					System.out.println("inside");
-			}
-			else {
-				entity.setPosition(entity.getPosition().x,
-									startPos.y);
-				entity.multiplySpeed(0.0f, 0.0f);
-				
+			// Check if outside world boundaries
+			if (!world_.contains(entity.getPosition().x, entity.getPosition().y)) {
+				System.out.println("outside");
+				// Put at closest position inside boundary
+				entity.setPosition(entity.getPosition().x, world_.getY() + world_.getHeight());
+				entity.multiplySpeed(1.0f, 0.0f);
 			}
 		}
 		
 	}
 	
 	public void init(GameContainer gc, Rectangle clip) {
+		try {
+			jumpfx = new Sound("SnakeEat.ogg");
+		} catch(SlickException e) {
+			System.out.println(e);
+			return;
+		}
+		
 		gravity_ = new Vector2f(0.0f, 1000.0f);
 		
 		world_ = new Rectangle(10.0f, 10.0f, clip.getWidth() - 20.0f, clip.getHeight() - 20.0f);
@@ -125,16 +139,15 @@ public class JumpAndRunGame implements BaseSubGame {
 		
 		
 		// Load player
-		Image[] playerImages = new Image[1];
+		SpriteSheet playerSpriteSheet;
 		try {
-			playerImages[0] = new Image("square.png");
+			playerSpriteSheet = new SpriteSheet(new Image("apple_sprite.png"), 69, 90);
 		} catch(SlickException e) {
 			System.out.println(e);
 			return;
 		}
 		
-		Animation playerAnim = new Animation(false);
-		playerAnim.addFrame(playerImages[0], 1);
+		Animation playerAnim = new Animation(playerSpriteSheet, 1000);
 		player_ = new JumpAndRunPlayer(playerAnim, new Vector2f(100.0f, 20.0f));
 		
 		entities_.add(player_);
