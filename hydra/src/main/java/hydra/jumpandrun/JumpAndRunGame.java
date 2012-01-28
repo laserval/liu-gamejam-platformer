@@ -10,6 +10,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.Sound;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
@@ -27,6 +28,8 @@ public class JumpAndRunGame implements BaseSubGame {
 	private Vector2f gravity_;
 	private float friction_ = 0.005f;
 	
+	static Sound jumpfx;
+	
 	public void render(GameContainer gc, Graphics g, Rectangle clip) {
 		
 		// Render entities
@@ -42,6 +45,11 @@ public class JumpAndRunGame implements BaseSubGame {
 		Input input = gc.getInput();
 		player_.resetMoves();
 		if (input.isKeyDown(Input.KEY_W)) {
+			/*
+			if(jumpfx.playing() == false){
+				jumpfx.play();
+			}
+			*/
 			player_.jump();
 		}
 		if (input.isKeyDown(Input.KEY_A)) {
@@ -103,6 +111,13 @@ public class JumpAndRunGame implements BaseSubGame {
 	}
 	
 	public void init(GameContainer gc, Rectangle clip) {
+		try {
+			jumpfx = new Sound("SnakeEat.ogg");
+		} catch(SlickException e) {
+			System.out.println(e);
+			return;
+		}
+		
 		gravity_ = new Vector2f(0.0f, 1000.0f);
 		
 		world_ = new Rectangle(10.0f, 10.0f, clip.getWidth() - 20.0f, clip.getHeight() - 20.0f);
