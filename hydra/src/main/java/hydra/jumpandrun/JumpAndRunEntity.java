@@ -56,6 +56,10 @@ public abstract class JumpAndRunEntity {
         pos_.set(x, y);
     }
     
+    public void setPosition(Vector2f v) {
+        pos_.set(v);
+    }
+    
     public void setSpeed(float x, float y) {
         speed_.set(x, y);
     }
