@@ -102,8 +102,29 @@ public class JumpAndRunGame implements BaseSubGame {
 			if (!world_.contains(entity.getPosition().x, entity.getPosition().y)) {
 				System.out.println("outside");
 				// Put at closest position inside boundary
-				entity.setPosition(entity.getPosition().x, world_.getY() + world_.getHeight());
-				entity.multiplySpeed(1.0f, 0.0f);
+				Vector2f newPos = new Vector2f(entity.getPosition());
+				Vector2f newSpeed = new Vector2f(entity.getSpeed());
+				if (entity.getPosition().x < world_.getX()) {
+					newPos.x = world_.getX() + 0.5f;
+					newSpeed.x = 0.0f;
+				}
+				
+				if (entity.getPosition().x > world_.getX() + world_.getWidth()) {
+					newPos.x = world_.getX() + world_.getWidth() - 0.5f;
+					newSpeed.x = 0.0f;
+				}
+					
+				if (entity.getPosition().y < world_.getY()) {
+					newPos.y = world_.getY();
+					newSpeed.y = 0.0f;
+				}
+				
+				if (entity.getPosition().y > world_.getY() + world_.getHeight()) {
+					newPos.y = world_.getY() + world_.getHeight();
+					newSpeed.y = 0.0f;
+				}
+				entity.setPosition(newPos);
+				entity.setSpeed(newSpeed);
 			}
 		}
 		
