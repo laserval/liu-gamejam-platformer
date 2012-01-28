@@ -13,6 +13,7 @@ import org.newdawn.slick.geom.Rectangle;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SpriteSheet;
 
 
 import hydra.BaseSubGame;
@@ -124,16 +125,16 @@ public class JumpAndRunGame implements BaseSubGame {
 		entities_.add(background);
 		
 		// Load player
-		Image[] playerImages = new Image[1];
+		SpriteSheet playerSpriteSheet;
 		try {
-			playerImages[0] = new Image("square.png");
+			playerSpriteSheet = new SpriteSheet(new Image("apple_sprite.png"), 4, 1);
 		} catch(SlickException e) {
 			System.out.println(e);
 			return;
 		}
 		
 		Animation playerAnim = new Animation(false);
-		playerAnim.addFrame(playerImages[0], 1);
+		playerAnim.addFrame(playerSpriteSheet, 1);
 		player_ = new JumpAndRunPlayer(playerAnim, new Vector2f(100.0f, 20.0f));
 		
 		entities_.add(player_);
