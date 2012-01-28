@@ -2,6 +2,7 @@ package hydra.jumpandrun;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.geom.Rectangle;
 
 public class JumpAndRunPlayer extends JumpAndRunEntity {
     

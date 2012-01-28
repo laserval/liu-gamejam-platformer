@@ -18,9 +18,6 @@ import org.newdawn.slick.Image;
 import hydra.BaseSubGame;
 
 public class JumpAndRunGame implements BaseSubGame {
-	
-	private Vector2f origin_;
-	
 	private JumpAndRunPlayer player_;
 	
 	private List<JumpAndRunEntity> entities_;
@@ -33,7 +30,7 @@ public class JumpAndRunGame implements BaseSubGame {
 		
 		// Render entities
 		for(JumpAndRunEntity entity : entities_) {
-			entity.draw(origin_.x, origin_.y);
+			entity.draw(clip);
 		}
 		
 	}
@@ -55,6 +52,9 @@ public class JumpAndRunGame implements BaseSubGame {
 		
 		// Physics
 		for(JumpAndRunEntity entity : entities_) {
+			if (!entity.applyPhysics()) {
+				continue;
+			}
 			
 			Vector2f startPos = entity.getPosition();
 			
@@ -86,14 +86,25 @@ public class JumpAndRunGame implements BaseSubGame {
 	}
 	
 	public void init(GameContainer gc, Rectangle clip) {
-		origin_ = new Vector2f(clip.getX(), clip.getY());
-		
 		gravity_ = new Vector2f(0.0f, 0.981f);
 		
 		world_ = new Rectangle(0.0f, 0.0f, clip.getWidth(), clip.getHeight());
 		
-		
 		entities_ = new ArrayList<JumpAndRunEntity>();
+		
+		Image[] backgroundImages = new Image[1];
+		try {
+			backgroundImages[0] = new Image("background.png");
+		} catch(SlickException e) {
+			System.out.println(e);
+			return;
+		}
+		
+		Animation backgroundAnim = new Animation(false);
+		backgroundAnim.addFrame(backgroundImages[0], 1);
+		JumpAndRunBackground background = new JumpAndRunBackground(backgroundAnim);
+		entities_.add(background);
+		
 		
 		Image[] playerImages = new Image[1];
 		try {
@@ -105,7 +116,7 @@ public class JumpAndRunGame implements BaseSubGame {
 		
 		Animation playerAnim = new Animation(false);
 		playerAnim.addFrame(playerImages[0], 1);
-		player_ = new JumpAndRunPlayer(playerAnim, new Vector2f(1.0f, 1.0f));
+		player_ = new JumpAndRunPlayer(playerAnim, new Vector2f(100.0f, 1.0f));
 		
 		entities_.add(player_);
 	}
