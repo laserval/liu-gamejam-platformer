@@ -12,6 +12,9 @@ public abstract class JumpAndRunEntity {
     
     protected Rectangle collisionMask_;
     
+    /**
+     * Position is the bottom center of the entity
+     * */
     protected Vector2f pos_;
 
     protected Vector2f speed_;
@@ -60,6 +63,10 @@ public abstract class JumpAndRunEntity {
         return speed_;
     }
     
+    public void multiplySpeed(float x, float y) {
+        speed_.set(speed_.x * x, speed_.y * y);
+    }
+    
     public Vector2f getAcc() {
         return acc_;
     }
@@ -73,7 +80,7 @@ public abstract class JumpAndRunEntity {
             speed_.set(0.0f, 0.0f);
         }
         else {
-            speed_.scale(1.0f - (f * (float)delta) );
+            this.multiplySpeed(1.0f - (f * (float)delta), 1.0f);
         }
     }
     
@@ -90,7 +97,8 @@ public abstract class JumpAndRunEntity {
     
     public void draw(Rectangle rect) {
         // Draw sprite with input coords as offset
-        sprite_.draw(rect.getX() + pos_.x, rect.getY() + pos_.y);
+        sprite_.draw(rect.getX() + pos_.x - sprite_.getWidth()/2.0f, 
+                    rect.getY() + pos_.y - sprite_.getHeight());
     }
 
 }
