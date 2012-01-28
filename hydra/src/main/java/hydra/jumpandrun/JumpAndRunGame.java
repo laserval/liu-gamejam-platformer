@@ -38,7 +38,6 @@ public class JumpAndRunGame implements BaseSubGame {
 		for(JumpAndRunEntity entity : entities_) {
 			entity.draw(clip);
 		}
-		
 	}
 	
 	public void update(GameContainer gc, int delta) {
