@@ -64,6 +64,10 @@ public abstract class JumpAndRunEntity {
         speed_.set(x, y);
     }
     
+    public void setSpeed(Vector2f v) {
+        speed_.set(v);
+    }
+    
     public Vector2f getSpeed() {
         return speed_;
     }
