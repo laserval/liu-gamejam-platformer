@@ -39,13 +39,13 @@ public class JumpAndRunPlayer extends JumpAndRunEntity {
         runningLeft_ = true;
     }
     
-    public void move(boolean inAir) {
+    public void move(boolean inAir, int delta) {
         if (!inAir && jumping_) this.impulse(jumpImpulse_);
         if (!inAir && runningLeft_) this.impulse(runLeftImpulse_);
         if (!inAir && runningRight_) this.impulse(runRightImpulse_);
         if (inAir && runningLeft_) this.impulse(runLeftImpulse_.scale(0.2f));
         if (inAir && runningRight_) this.impulse(runRightImpulse_.scale(0.2f));
-        super.move(inAir);
+        super.move(inAir, delta);
     }
     
     public String toString() {

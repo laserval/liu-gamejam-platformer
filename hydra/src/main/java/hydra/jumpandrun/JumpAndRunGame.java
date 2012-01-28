@@ -69,7 +69,7 @@ public class JumpAndRunGame implements BaseSubGame {
 				entity.friction(0.1f);
 			}
 			// Move
-			entity.move(inAir);
+			entity.move(inAir, delta);
 			
 			// Check if inside world boundaries
 			if (world_.contains(entity.getPosition().x + entity.getWidth()/2.0f, 

@@ -47,9 +47,9 @@ public abstract class JumpAndRunEntity implements Renderable {
         acc_.add(v);
     }
     
-    public void move(boolean inAir) {
+    public void move(boolean inAir, int delta) {
         speed_.add(acc_);
-        pos_.add(speed_);
+        pos_.add(speed_.scale(delta * 0.01f));
         acc_.set(0.0f, 0.0f);
     }
     
