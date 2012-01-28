@@ -20,33 +20,18 @@ public abstract class SnakeTileSnake extends SnakeTile {
 		if (successor_ != null) {
 			successor_.moveRecursive();
 			SnakeGame.instance_.moveTile(successor_, x_, y_);
+		} else if (SnakeGame.instance_.shouldSnakeGrow()) {
+			successor_ = new SnakeTileSnakeBody(x_, y_, clipRect_, null);
+			SnakeGame.instance_.moveTile(successor_, x_, y_);
+			SnakeGame.instance_.onSnakeGrown();
 		} else {
 			SnakeGame.instance_.clearTile(x_, y_);
 		}
 	}
 	
-	public void move(int direction) {
-		moveRecursive();
-		
-		switch (direction) {
-		default:
-		case SnakeGame.DIRECTION_RIGHT:
-			SnakeGame.instance_.moveTile(this, x_ + 1, y_);
-			break;
-			
-		case SnakeGame.DIRECTION_LEFT:
-		SnakeGame.instance_.moveTile(this, x_ - 1, y_);
-			break;
-			
-		case SnakeGame.DIRECTION_UP:
-		SnakeGame.instance_.moveTile(this, x_, y_ - 1);
-			break;
-			
-		case SnakeGame.DIRECTION_DOWN:
-		SnakeGame.instance_.moveTile(this, x_, y_ + 1);
-			break;
-			
-		}
+	public int[] onHeadMovement() {
+		SnakeGame.instance_.onSnakeEatSelf(x_, y_);
+		return new int[] {x_, y_};
 	}
 }
 

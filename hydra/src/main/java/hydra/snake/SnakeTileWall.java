@@ -18,4 +18,9 @@ public class SnakeTileWall extends SnakeTile {
 		g.setColor(new Color(150, 150, 150));
 		g.fillRect(clipRect_.getX() + 2, clipRect_.getY() + 2, clipRect_.getWidth() - 4, clipRect_.getHeight() - 4);
 	}
+	
+	public int[] onHeadMovement() {
+		SnakeGame.instance_.onCrash();
+		return new int[] {x_, y_};
+	}
 }

@@ -13,5 +13,29 @@ public class SnakeTileSnakeHead extends SnakeTileSnake {
 		g.setColor(new Color(220, 220, 0));
 		g.fillOval(clipRect_.getX(), clipRect_.getY(), clipRect_.getWidth(), clipRect_.getHeight());
 	}
+	
+	public void move(int direction) {
+		moveRecursive();
+		
+		switch (direction) {
+		default:
+		case SnakeGame.DIRECTION_RIGHT:
+			SnakeGame.instance_.moveHead(x_ + 1, y_);
+			break;
+			
+		case SnakeGame.DIRECTION_LEFT:
+			SnakeGame.instance_.moveHead(x_ - 1, y_);
+			break;
+			
+		case SnakeGame.DIRECTION_UP:
+			SnakeGame.instance_.moveHead(x_, y_ - 1);
+			break;
+			
+		case SnakeGame.DIRECTION_DOWN:
+			SnakeGame.instance_.moveHead(x_, y_ + 1);
+			break;
+			
+		}
+	}
 }
 

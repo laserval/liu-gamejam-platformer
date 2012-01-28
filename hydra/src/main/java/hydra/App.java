@@ -9,6 +9,10 @@ import org.newdawn.slick.geom.Rectangle;
 import hydra.snake.SnakeGame;
 
 public class App extends BasicGame {
+	public static App instance_;
+	
+	boolean exitRequested_ = false;
+	
 	private SnakeGame snakeGame_ = new SnakeGame();;
 	private JumpAndRunGame jumpAndRunGame_ = new JumpAndRunGame();
 	
@@ -17,6 +21,7 @@ public class App extends BasicGame {
 	
 	public App() {
 		super("<insert awesome name here>");
+		instance_ = this;
 	}
 	
     public static void main(String[] args) throws Exception {
@@ -30,13 +35,27 @@ public class App extends BasicGame {
 	}
 	
 	public void update(GameContainer gc, int delta) {
-		snakeGame_.update(gc, delta);
-		jumpAndRunGame_.update(gc, delta);
+		if (exitRequested_) {
+			gc.exit();
+		} else {
+			snakeGame_.update(gc, delta);
+			jumpAndRunGame_.update(gc, delta);
+		}
 	}
 	
 	public void init(GameContainer gc) {
 		snakeGame_.init(gc, snakeRectangle_);
 		jumpAndRunGame_.init(gc, jumpAndRunRectangle_);
+	}
+	
+	public void gameOver(boolean snakeWins) {
+		if (snakeWins) {
+			System.out.println("Snake wins!");
+		} else {
+			System.out.println("Jump&run wins!");
+		}
+		
+		exitRequested_ = true;
 	}
 }
 

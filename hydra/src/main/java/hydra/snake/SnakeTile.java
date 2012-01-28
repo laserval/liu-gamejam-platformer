@@ -23,4 +23,6 @@ public abstract class SnakeTile {
 	}
 	
 	public abstract void render(Graphics g);
+	
+	public abstract int[] onHeadMovement();
 }

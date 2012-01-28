@@ -13,5 +13,10 @@ public class SnakeTileFood extends SnakeTile {
 		g.setColor(new Color(0, 0, 220));
 		g.fillOval(clipRect_.getX() + 1, clipRect_.getY() + 1, clipRect_.getWidth() - 2, clipRect_.getHeight() - 2);
 	}
+	
+	public int[] onHeadMovement() {
+		SnakeGame.instance_.growSnake(2);
+		return new int[] {x_, y_};
+	}
 }
 
