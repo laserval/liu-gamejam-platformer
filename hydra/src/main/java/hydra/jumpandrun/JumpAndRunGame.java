@@ -30,6 +30,7 @@ public class JumpAndRunGame implements BaseSubGame {
 	private float friction_ = 0.007f;
 	
 	static Sound jumpfx;
+	private Boolean soundPlaying = false;
 	
 	public void render(GameContainer gc, Graphics g, Rectangle clip) {
 		
@@ -46,13 +47,15 @@ public class JumpAndRunGame implements BaseSubGame {
 		Input input = gc.getInput();
 		player_.resetMoves();
 
-		/*
-			if(jumpfx.playing() == false){
-				jumpfx.play();
-			}
-		*/
 		if (input.isKeyPressed(Input.KEY_W)) {
+			if (soundPlaying == false){
+				jumpfx.play(1, 3);
+				soundPlaying = true;
+			}
 			player_.jump();
+		}
+		if (!input.isKeyPressed(input.KEY_W)) {
+			soundPlaying = false;
 		}
 		if (input.isKeyDown(Input.KEY_A)) {
 			player_.left();
@@ -132,7 +135,7 @@ public class JumpAndRunGame implements BaseSubGame {
 	
 	public void init(GameContainer gc, Rectangle clip) {
 		try {
-			jumpfx = new Sound("SnakeEat.ogg");
+			jumpfx = new Sound("Jump.ogg");
 		} catch(SlickException e) {
 			System.out.println(e);
 			return;
