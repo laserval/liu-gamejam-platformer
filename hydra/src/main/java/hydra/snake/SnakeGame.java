@@ -1,5 +1,7 @@
 package hydra.snake;
 
+import java.util.Random;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
@@ -7,6 +9,7 @@ import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.Sound;
 
 import hydra.BaseSubGame;
 import hydra.App;
@@ -39,6 +42,10 @@ public class SnakeGame implements BaseSubGame {
 	
 	private Music backgroundMusic;
 	
+	Sound fallBackSound_;
+	
+	Random rand = new Random();
+	
 	public SnakeGame() {
 		instance_ = this;
 		try {
@@ -46,6 +53,12 @@ public class SnakeGame implements BaseSubGame {
 		} catch(SlickException e) {
 			System.out.println(e);
 			return;
+		}
+		
+		try {
+			fallBackSound_ = new Sound("ScreamShort.ogg");
+		} catch(SlickException e) {
+			System.out.println(e);
 		}
 		
 		backgroundMusic.loop();
@@ -129,6 +142,22 @@ public class SnakeGame implements BaseSubGame {
 	public void growSnake(int length, String type) {
 		snakeGrowth_ += length;
 		JumpAndRunGame.instance_.spawnObject(type);
+		
+		while (true) {
+			int x = rand.nextInt(width_);
+			int y = rand.nextInt(height_);
+			
+			if (tiles_[x][y] instanceof SnakeTileEmpty) {
+				Rectangle rect = new Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+				if (rand.nextInt(2) == 1) {
+					tiles_[x][y] = new SnakeTileFood(x, y, rect);
+				} else {
+					tiles_[x][y] = new SnakeTileRat(x, y, rect);
+				}
+				
+				break;
+			}
+		}
 	}
 	
 	public boolean shouldSnakeGrow() {
@@ -170,6 +199,7 @@ public class SnakeGame implements BaseSubGame {
 	}
 	
 	public void moveJRBackward() {
+		fallBackSound_.play();
 		SnakeTileSnake curPart = snakeHead_;
 		while (curPart != null) {
 			curPart = curPart.successor_;

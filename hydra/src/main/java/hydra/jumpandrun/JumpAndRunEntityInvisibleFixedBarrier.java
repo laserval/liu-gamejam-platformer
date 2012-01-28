@@ -21,12 +21,14 @@ public class JumpAndRunEntityInvisibleFixedBarrier extends JumpAndRunEntity {
     }
     
     public void draw(Graphics g, Rectangle rect) {
+/*
 		g.setColor(new Color(0, 255, 0, 100));
 		
 		g.fillRect(rect.getX() + pos_.x - getWidth()/2.0f, 
                     rect.getY() + pos_.y - getHeight(), 
                     collisionMask_.getWidth(), 
                     collisionMask_.getHeight());
+*/
     }
 	
 	public float getWidth() {

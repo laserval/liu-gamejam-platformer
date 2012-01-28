@@ -14,7 +14,7 @@ public abstract class JumpAndRunEntity {
     
     protected int inAirFrame_;
     
-    protected Rectangle collisionMask_;
+    protected Shape collisionMask_;
     
     /**
      * Position is the bottom center of the entity
