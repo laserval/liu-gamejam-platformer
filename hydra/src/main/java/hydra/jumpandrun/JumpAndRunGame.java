@@ -23,43 +23,43 @@ import hydra.snake.SnakeGame;
 
 public class JumpAndRunGame implements BaseSubGame {
 	public static JumpAndRunGame instance_;
-	
+
 	private JumpAndRunPlayer player_;
-	
+
 	private List<JumpAndRunEntity> entities_;
-	
+
 	private Rectangle world_;
-	
+
 	private Vector2f gravity_;
 	private float friction_ = 0.007f;
-	
+
 	static Sound jumpfx;
 	private boolean soundPlaying = false;
-	
+
 	public float scrollPixelsPerSecond_ = 150;
 	private float scrollPixelOverlap_ = 0;
-	
+
 	private int freezePhysicsTimeout_ = 0;
 	private int freezePhysicsInterval_ = 1000;
 	public boolean reverseScrolling_ = false;
-	
-	
+
+
 	public JumpAndRunGame() {
 		instance_ = this;
 	}
-	
+
 	public void render(GameContainer gc, Graphics g, Rectangle clip) {
-		
+
 		// Render entities
 		for(JumpAndRunEntity entity : entities_) {
 			entity.draw(g, clip);
 		}
-		
+
 		player_.draw(g, clip);
 	}
-	
+
 	public void update(GameContainer gc, int delta) {
-		
+
 		if (freezePhysicsTimeout_ <= 0) {
 			// Controls
 			Input input = gc.getInput();
@@ -82,21 +82,21 @@ public class JumpAndRunGame implements BaseSubGame {
 				player_.right();
 			}
 		}
-		
-		
+
+
 		scrollPixelOverlap_ += scrollPixelsPerSecond_ * (delta / 1000.f);;
 		int curScroll = (int)scrollPixelOverlap_;
 		scrollPixelOverlap_ -= curScroll;
-		
+
 		ArrayList<JumpAndRunEntity> deleteList = new ArrayList();
-		
+
 		// scrolling
 		for(JumpAndRunEntity entity : entities_) {
 			if (entity.pos_ != null && entity.pos_.x < -1000) {
 				deleteList.add(entity);
 				continue;
 			}
-			
+
 			if (entity.applyScrolling()) {
 				// scrolling
 				// TODO: Manage collisions here
@@ -108,14 +108,14 @@ public class JumpAndRunGame implements BaseSubGame {
 				}
 				entity.setPosition(newScrollPos);
 			}
-			
+
 			entity.update(delta);
 		}
-		
+
 		for (JumpAndRunEntity entity : deleteList) {
 			entities_.remove(entity);
 		}
-		
+
 		if (freezePhysicsTimeout_ > 0) {
 			freezePhysicsTimeout_ -= delta;
 			if (freezePhysicsTimeout_ <= 0) {
@@ -123,14 +123,14 @@ public class JumpAndRunGame implements BaseSubGame {
 				reverseScrolling_ = false;
 				scrollPixelsPerSecond_ /= 4;
 			}
-			
+
 			return;
 		}
-			
+
 		Vector2f startPos = player_.getPosition();
-		
+
 		boolean inAir = player_.getPosition().y < world_.getY() + world_.getHeight();
-		
+
 		if (inAir) {
 			// Apply gravity if in air
 			player_.impulse(gravity_, delta);
@@ -145,7 +145,7 @@ public class JumpAndRunGame implements BaseSubGame {
 		player_.updateSprite(inAir, delta);
 		// Move
 		player_.move(inAir, delta);
-		
+
 		// Find collisions for this entity
 		for(JumpAndRunEntity otherEntity : entities_) {
 			if (!player_.equals(otherEntity)) {
@@ -156,11 +156,11 @@ public class JumpAndRunGame implements BaseSubGame {
 				}
 			}
 		}
-		
+
 		// Check if outside world boundaries
 		if (!world_.contains(player_.getPosition().x, player_.getPosition().y)) {
 			//System.out.println("outside");
-			
+
 			// if player reached one of the sides, move lump inside snake
 			if (player_.getPosition().x < world_.getX()) {
 				// left side
@@ -173,11 +173,11 @@ public class JumpAndRunGame implements BaseSubGame {
 				freezePhysicsTimeout_ = freezePhysicsInterval_;
 				scrollPixelsPerSecond_ *= 4;
 			}
-			
+
 			// Put at closest position inside boundary
 			Vector2f newPos = new Vector2f(player_.getPosition());
 			Vector2f newSpeed = new Vector2f(player_.getSpeed());
-			
+
 			// can't fall through the ground
 			if (player_.getPosition().y > world_.getY() + world_.getHeight()) {
 				newPos.y = world_.getY() + world_.getHeight();
@@ -187,7 +187,7 @@ public class JumpAndRunGame implements BaseSubGame {
 			player_.setSpeed(newSpeed);
 		}
 	}
-	
+
 	public void init(GameContainer gc, Rectangle clip) {
 		try {
 			jumpfx = new Sound("Jump.ogg");
@@ -195,13 +195,13 @@ public class JumpAndRunGame implements BaseSubGame {
 			System.out.println(e);
 			return;
 		}
-		
+
 		gravity_ = new Vector2f(0.0f, 1000.0f);
-		
+
 		world_ = new Rectangle(10.0f, 10.0f, clip.getWidth() - 20.0f, clip.getHeight() - 20.0f);
-		
+
 		entities_ = new ArrayList<JumpAndRunEntity>();
-		
+
 		// Load background for Jumper
 		Image[] backgroundImages = new Image[1];
 		try {
@@ -210,13 +210,12 @@ public class JumpAndRunGame implements BaseSubGame {
 			System.out.println(e);
 			return;
 		}
-		
+
 		Animation backgroundAnim = new Animation(false);
 		backgroundAnim.addFrame(backgroundImages[0], 1);
 		JumpAndRunBackground background = new JumpAndRunBackground(backgroundAnim);
 		entities_.add(background);
-		
-		
+
 		// Load player
 		SpriteSheet playerSpriteSheet;
 		try {
@@ -225,19 +224,34 @@ public class JumpAndRunGame implements BaseSubGame {
 			System.out.println(e);
 			return;
 		}
-		
+
 		Animation playerAnim = new Animation(playerSpriteSheet, 1000);
 		player_ = new JumpAndRunPlayer(playerAnim, new Vector2f(400.0f, 150.0f));
-		
+
 		entities_.add(player_);
+
+		// Load background for RIGHT side of snakeskin
 		
+		/*
+		Image[] snakeRSideImages = new Image[1];
+		try {
+			snakeRSideImages[0] = new Image("tunnel_end.png");
+		} catch(SlickException e) {
+			System.out.println(e);
+			return;
+		}
+
+		Animation snakeRSideAnim = new Animation(false);
+		snakeRSideAnim.addFrame(snakeRSideImages[0], 1);
+		*/
+
 		// add barrier
 		JumpAndRunEntityInvisibleFixedBarrier barrier = new JumpAndRunEntityInvisibleFixedBarrier(
 				new Vector2f(world_.getX() + world_.getWidth()/2, world_.getY() - 5), 
 				new Rectangle(0, 0, world_.getWidth(), 20));
 		entities_.add(barrier);
 	}
-	
+
 	private void handleCollision(JumpAndRunPlayer player, JumpAndRunEntity other) {
 		if (!other.deadly_) {
 			// disentangle
@@ -263,7 +277,7 @@ public class JumpAndRunGame implements BaseSubGame {
 				//System.out.println("from the left side");
 				player.pos_.x -= (player.collisionMask_.getMaxX() - other.collisionMask_.getMinX());
 			}
-			
+
 			player_.speed_.set(0, 0);
 		} else {
 			System.out.println("Jump&Run player dies because of collision with obstacle");
@@ -271,7 +285,7 @@ public class JumpAndRunGame implements BaseSubGame {
 			player_.pos_.x += (10 + other.collisionMask_.getMaxX() - player.collisionMask_.getMinX());
 		}
 	}
-	
+
 	public void spawnObject(String type) {
 		JumpAndRunObstacle obstacle = new JumpAndRunObstacle(new Vector2f(1000, world_.getHeight() + 5), type);
 		entities_.add(obstacle);
