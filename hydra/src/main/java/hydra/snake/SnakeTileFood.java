@@ -20,7 +20,7 @@ public class SnakeTileFood extends SnakeTile {
 		super(x, y, rect);
 		
 		try {
-			fx = new Sound("SnakeEat.ogg");
+			fx = new Sound("SnakeEatShort.ogg");
 		} catch(SlickException e) {
 			System.out.println(e);
 			return;
