@@ -19,9 +19,11 @@ public class JumpAndRunPlayer extends JumpAndRunEntity {
         speed_ = new Vector2f(0.0f, 0.0f);
         acc_ = new Vector2f(0.0f, 0.0f);
         
-        jumpImpulse_ = new Vector2f(0.0f, -10.0f);
-        runLeftImpulse_ = new Vector2f(-5.0f, 0.0f);
-        runRightImpulse_ = new Vector2f(5.0f, 0.0f);
+        jumpImpulse_ = new Vector2f(0.0f, -8500.0f);
+        runLeftImpulse_ = new Vector2f(-250.0f, 0.0f);
+        runRightImpulse_ = new Vector2f(250.0f, 0.0f);
+        
+        collisionMask_ = new Rectangle(0.0f, 0.0f, sprite_.getWidth(), sprite_.getHeight());
     }
     
     public void resetMoves() {
@@ -41,11 +43,13 @@ public class JumpAndRunPlayer extends JumpAndRunEntity {
     }
     
     public void move(boolean inAir, int delta) {
-        if (!inAir && jumping_) this.impulse(jumpImpulse_);
-        if (!inAir && runningLeft_) this.impulse(runLeftImpulse_);
-        if (!inAir && runningRight_) this.impulse(runRightImpulse_);
-        if (inAir && runningLeft_) this.impulse(runLeftImpulse_.scale(0.2f));
-        if (inAir && runningRight_) this.impulse(runRightImpulse_.scale(0.2f));
+        if (!inAir && jumping_) {
+            this.impulse(jumpImpulse_, delta);
+        }
+        if (!inAir && runningLeft_) this.impulse(runLeftImpulse_, delta);
+        if (!inAir && runningRight_) this.impulse(runRightImpulse_, delta);
+        if (inAir && runningLeft_) this.impulse(runLeftImpulse_, delta);
+        if (inAir && runningRight_) this.impulse(runRightImpulse_, delta);
         super.move(inAir, delta);
     }
     

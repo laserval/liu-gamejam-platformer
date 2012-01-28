@@ -13,6 +13,7 @@ public class JumpAndRunBackground extends JumpAndRunEntity {
     public JumpAndRunBackground(Animation sprite) {
         sprite_ = sprite;
         applyPhysics_ = false;
+        solid_ = false;
     }
     
     public String toString() {

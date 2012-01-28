@@ -49,7 +49,7 @@ public class JumpAndRunGame implements BaseSubGame {
 		if (input.isKeyDown(Input.KEY_D)) {
 			player_.right();
 		}
-		
+		System.out.println((float)delta*0.001f);
 		// Physics
 		for(JumpAndRunEntity entity : entities_) {
 			if (!entity.applyPhysics()) {
@@ -62,14 +62,30 @@ public class JumpAndRunGame implements BaseSubGame {
 			
 			if (inAir) {
 				// Apply gravity if in air
-				entity.impulse(gravity_);
+				entity.impulse(gravity_, delta);
+				System.out.println("in air");
 			}
 			else {
+				System.out.println("on ground");
 				// Apply friction if on ground
-				entity.friction(0.1f);
+				entity.friction(0.005f, delta);
 			}
+			System.out.println(entity.getAcc());
 			// Move
 			entity.move(inAir, delta);
+			
+			// Find collisions for this entity
+			for(JumpAndRunEntity otherEntity : entities_) {
+				if (!entity.equals(otherEntity)
+					&& otherEntity.isSolid()) {
+					System.out.println("Checking collisions with " + otherEntity);
+					if (entity.collidesWith(otherEntity)) {
+						// Move out of collision
+						entity.setPosition(startPos.x, startPos.y);
+						entity.setSpeed(0.0f, 0.0f);
+					}
+				}
+			}
 			
 			// Check if inside world boundaries
 			if (world_.contains(entity.getPosition().x + entity.getWidth()/2.0f, 
@@ -86,12 +102,13 @@ public class JumpAndRunGame implements BaseSubGame {
 	}
 	
 	public void init(GameContainer gc, Rectangle clip) {
-		gravity_ = new Vector2f(0.0f, 0.981f);
+		gravity_ = new Vector2f(0.0f, 500.0f);
 		
-		world_ = new Rectangle(0.0f, 0.0f, clip.getWidth(), clip.getHeight());
+		world_ = new Rectangle(10.0f, 10.0f, clip.getWidth() - 10.0f, clip.getHeight() - 10.0f);
 		
 		entities_ = new ArrayList<JumpAndRunEntity>();
 		
+		// Load background
 		Image[] backgroundImages = new Image[1];
 		try {
 			backgroundImages[0] = new Image("background.png");
@@ -105,7 +122,7 @@ public class JumpAndRunGame implements BaseSubGame {
 		JumpAndRunBackground background = new JumpAndRunBackground(backgroundAnim);
 		entities_.add(background);
 		
-		
+		// Load player
 		Image[] playerImages = new Image[1];
 		try {
 			playerImages[0] = new Image("square.png");
@@ -116,7 +133,7 @@ public class JumpAndRunGame implements BaseSubGame {
 		
 		Animation playerAnim = new Animation(false);
 		playerAnim.addFrame(playerImages[0], 1);
-		player_ = new JumpAndRunPlayer(playerAnim, new Vector2f(100.0f, 1.0f));
+		player_ = new JumpAndRunPlayer(playerAnim, new Vector2f(100.0f, 20.0f));
 		
 		entities_.add(player_);
 	}
