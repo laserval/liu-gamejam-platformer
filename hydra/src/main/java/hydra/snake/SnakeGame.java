@@ -100,7 +100,7 @@ public class SnakeGame implements BaseSubGame {
 	}
 	
 	public void clearTile(int x, int y) {
-		tiles_[x][y] = null;
+		tiles_[x][y] = new SnakeTileEmpty(x, y, new Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE));
 	}
 	
 	public void growSnake(int length) {

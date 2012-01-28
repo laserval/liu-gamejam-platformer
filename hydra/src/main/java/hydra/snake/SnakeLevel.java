@@ -17,6 +17,8 @@ public class SnakeLevel {
 					tiles[x][y] = new SnakeTileWall(x, y, rect);
 				} else if (rand_.nextInt(100) == 27) {
 					tiles[x][y] = new SnakeTileFood(x, y, rect);
+				} else {
+					tiles[x][y] = new SnakeTileEmpty(x, y, rect);
 				}
 			}
 		}
@@ -46,11 +48,23 @@ public class SnakeLevel {
 		// create snake
 		int y = height/2 - 1;
 		int x = width/2 - 5;
-		SnakeTileSnakeBody last = null;
+		SnakeTileSnake last = null;
 		for (; x < width/2 + 4; x++) {
 			Rectangle rect = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
-			tiles[x][y] = last = new SnakeTileSnakeBody(x, y, rect, last);
+			SnakeTileSnake current;
+			if (x == width/2) {
+				current = new SnakeTileSnakeBodyJR(x, y, rect, last);
+			} else {
+				current = new SnakeTileSnakeBody(x, y, rect, last);
+			}
+			
+			if (last != null) {
+				last.predecessor_ = current;
+			}
+			tiles[x][y] = current;
+			last = current;
 		}
+		
 		
 		Rectangle headRect = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
 		SnakeTileSnakeHead head = new SnakeTileSnakeHead(x, y, headRect, last);
