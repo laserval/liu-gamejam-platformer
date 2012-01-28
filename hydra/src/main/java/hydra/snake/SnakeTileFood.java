@@ -53,5 +53,9 @@ public class SnakeTileFood extends SnakeTile {
 			fx.play();
 		}
 	}
+	
+	public String toString() {
+		return "food";
+	}
 }
 

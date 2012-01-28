@@ -61,5 +61,9 @@ public class SnakeTileSnakeHead extends SnakeTileSnake {
 			break;
 		}		
 	}
+	
+	public String toString() {
+		return "head";
+	}
 }
 

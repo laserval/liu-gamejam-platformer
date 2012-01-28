@@ -27,6 +27,7 @@ public class App extends BasicGame {
 	
     public static void main(String[] args) throws Exception {
 		AppGameContainer container = new AppGameContainer(new App(), 900, 700, false);
+		container.setTargetFrameRate(60);
 		container.start();
     }
     

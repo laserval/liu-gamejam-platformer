@@ -29,7 +29,7 @@ public class SnakeGame implements BaseSubGame {
 	private int moveInterval_ = 100; // 100 is good
 	
 	private int snakeGrowth_;
-	
+	private boolean jrMovePossible_ = true;
 	
 	public int currentDirection_ = DIRECTION_RIGHT;
 	public int lastDirection_ = DIRECTION_RIGHT;
@@ -60,9 +60,20 @@ public class SnakeGame implements BaseSubGame {
 			currentDirection_ = DIRECTION_DOWN;
 		}
 		
+		if (jrMovePossible_) {
+			if (gc.getInput().isKeyDown(Input.KEY_B)) {
+				moveJRBackward();
+				jrMovePossible_ = false;
+			} else if (gc.getInput().isKeyDown(Input.KEY_N)) {
+				moveJRForward();
+				jrMovePossible_ = false;
+			}
+		}
+		
 		moveTimer_ -= delta;
 		if (moveTimer_ <= 0) {
 			moveTimer_ = moveInterval_;
+			jrMovePossible_ = true;
 			
 			// move snake
 			snakeHead_.move(currentDirection_); // moves the body recursively
@@ -122,5 +133,71 @@ public class SnakeGame implements BaseSubGame {
 	
 	public void onCrash() {
 		App.instance_.gameOver(false);
+	}
+	
+	
+	public void moveJRForward() {
+		SnakeTileSnake curPart = snakeHead_;
+		while (curPart != null && !(curPart instanceof SnakeTileSnakeBodyJR)) {
+			curPart = curPart.successor_;
+		}
+		
+		if (curPart == null) {
+			System.err.println("J&R snake body part not found!");
+			System.exit(1);
+		}
+		
+		SnakeTileSnake predec = curPart.predecessor_;
+		if (predec instanceof SnakeTileSnakeHead) {
+			System.out.println("J&R player reached snake head!");
+			App.instance_.gameOver(false);
+		} else {
+			switchBodyParts(predec, curPart);
+		}
+	}
+	
+	public void moveJRBackward() {
+		SnakeTileSnake curPart = snakeHead_;
+		while (curPart != null) {
+			curPart = curPart.successor_;
+			
+			if (curPart instanceof SnakeTileSnakeBodyJR) {
+				break;
+			}
+		}
+		
+		if (curPart == null) {
+			System.err.println("J&R snake body part not found!");
+			System.exit(1);
+		} else {
+		}
+		
+		SnakeTileSnake succ = curPart.successor_;
+		if (succ == null) {
+			System.out.println("J&R player reached snake ass!");
+			App.instance_.gameOver(true);
+		} else {
+			switchBodyParts(curPart, succ);
+		}
+	}
+	
+	public void switchBodyParts(SnakeTileSnake front, SnakeTileSnake back) {
+		front.predecessor_.successor_ = back;
+		
+		if (back.successor_ != null) {
+			back.successor_.predecessor_ = front;
+		}
+		
+		SnakeTileSnake tmp = back.successor_;
+		back.successor_ = front;
+		back.predecessor_ = front.predecessor_;
+		
+		front.predecessor_ = back;
+		front.successor_ = tmp;
+		
+		int tmpX = front.x_;
+		int tmpY = front.y_;
+		moveTile(front, back.x_, back.y_);
+		moveTile(back, tmpX, tmpY);
 	}
 }
