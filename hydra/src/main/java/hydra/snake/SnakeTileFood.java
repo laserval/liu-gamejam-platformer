@@ -55,7 +55,7 @@ public class SnakeTileFood extends SnakeTile {
 	}
 	
 	public String toString() {
-		return "food";
+		return "food (apple)";
 	}
 }
 

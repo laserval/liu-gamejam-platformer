@@ -8,7 +8,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
-public class SnakeTileRat extends SnakeTile {
+public class SnakeTileChili extends SnakeTile {
 	//private int volume = 10;
 	
 	static Sound fx;
@@ -16,7 +16,7 @@ public class SnakeTileRat extends SnakeTile {
 	Animation ratAnim = new Animation(false);
 	
 	
-	public SnakeTileRat(int x, int y, Rectangle rect) {
+	public SnakeTileChili(int x, int y, Rectangle rect) {
 		super(x, y, rect);
 		
 		try {
@@ -28,7 +28,7 @@ public class SnakeTileRat extends SnakeTile {
 
 		// Load apples
 		try {
-			ratImages[0] = new Image("mouse_tile.jpg");
+			ratImages[0] = new Image("cili_tile.jpg");
 		} catch(SlickException e) {
 			System.out.println(e);
 			return;
@@ -44,7 +44,7 @@ public class SnakeTileRat extends SnakeTile {
 	public int[] onHeadMovement(){
 		// Collision with food
 		playingSound();
-		SnakeGame.instance_.growSnake(2, "rat");
+		SnakeGame.instance_.growSnake(2, "chili");
 		return new int[] {x_, y_};
 	}
 
@@ -55,7 +55,8 @@ public class SnakeTileRat extends SnakeTile {
 	}
 	
 	public String toString() {
-		return "food (rat)";
+		return "food (chili)";
 	}
 }
+
 

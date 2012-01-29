@@ -320,6 +320,9 @@ public class JumpAndRunGame implements BaseSubGame {
 
 	public void spawnObject(String type) {
 		JumpAndRunObstacle obstacle = new JumpAndRunObstacle(new Vector2f(1000, world_.getHeight() + 5), type);
+		if (type == "chili") {
+			obstacle.pos_.y = world_.getY() + obstacle.getHeight();
+		}
 		entities_.add(obstacle);
 	}
 }

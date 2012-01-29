@@ -25,7 +25,7 @@ public class SnakeGame implements BaseSubGame {
 	public static final int DIRECTION_UP = 2;
 	public static final int DIRECTION_DOWN = 3;
 	
-	public static final int NUM_FOOD = 3;
+	public static final int NUM_FOOD = 4;
 	
 	private int width_;
 	private int height_;
@@ -163,10 +163,17 @@ public class SnakeGame implements BaseSubGame {
 			
 			if (tiles_[x][y] instanceof SnakeTileEmpty) {
 				Rectangle rect = new Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-				if (rand.nextInt(2) == 1) {
+				switch (rand.nextInt(3)) {
+				default:
+				case 0:
 					tiles_[x][y] = new SnakeTileFood(x, y, rect);
-				} else {
+					break;
+				case 1:
 					tiles_[x][y] = new SnakeTileRat(x, y, rect);
+					break;
+				case 2:
+					tiles_[x][y] = new SnakeTileChili(x, y, rect);
+					break;
 				}
 				
 				break;
@@ -204,12 +211,14 @@ public class SnakeGame implements BaseSubGame {
 			System.exit(1);
 		}
 		
+		System.out.println("succ: " + countSuccessors(curPart) + " predec: " + countPredecessors(curPart));
+		
 		SnakeTileSnake predec = curPart.predecessor_;
 		if (predec instanceof SnakeTileSnakeHead) {
 			System.out.println("J&R player reached snake head!");
 			App.instance_.gameOver(false);
 		} else {
-			switchBodyParts(predec.predecessor_, curPart);
+			switchBodyParts(predec, curPart);
 		}
 	}
 	
@@ -229,6 +238,8 @@ public class SnakeGame implements BaseSubGame {
 			System.exit(1);
 		} else {
 		}
+		
+		System.out.println("succ: " + countSuccessors(curPart) + " predec: " + countPredecessors(curPart));
 		
 		SnakeTileSnake succ = curPart.successor_;
 		if (succ == null || succ.successor_ == null) {
@@ -282,5 +293,23 @@ public class SnakeGame implements BaseSubGame {
 		int tmpY = front.y_;
 		moveTile(front, back.x_, back.y_);
 		moveTile(back, tmpX, tmpY);
+	}
+	
+	public int countSuccessors(SnakeTileSnake origin) {
+		int count = -1; // tail does not count
+		while (origin.successor_ != null) {
+			origin = origin.successor_;
+			count += 1;
+		}
+		return count;
+	}
+	
+	public int countPredecessors(SnakeTileSnake origin) {
+		int count = -1; // head does not count
+		while (origin.predecessor_ != null) {
+			origin = origin.predecessor_;
+			count += 1;
+		}
+		return count;
 	}
 }
