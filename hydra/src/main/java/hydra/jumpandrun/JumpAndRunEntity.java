@@ -111,13 +111,14 @@ public abstract class JumpAndRunEntity {
     }
     
     public void draw(Graphics g, Rectangle rect) {
-		// collision area
-		g.setColor(new Color(0, 255, 0));
-		g.fillRect(rect.getX() + collisionMask_.getX(), rect.getY() + collisionMask_.getY(), collisionMask_.getWidth(), collisionMask_.getHeight());
-		
 		// Draw sprite with input coords as offset
         sprite_.draw(rect.getX() + pos_.x - getWidth()/2.0f, 
                     rect.getY() + pos_.y - getHeight());
+                    
+        // collision area
+		//g.setColor(new Color(0, 255, 0));
+		//g.fillRect(rect.getX() + collisionMask_.getX(), rect.getY() + collisionMask_.getY(), collisionMask_.getWidth(), collisionMask_.getHeight());
+		//g.draw(collisionMask_);
 		
 		// center
 		//g.setColor(new Color(0, 255, 0));

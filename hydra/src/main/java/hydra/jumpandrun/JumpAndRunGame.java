@@ -310,7 +310,7 @@ public class JumpAndRunGame implements BaseSubGame {
 			//System.out.println("Jump&Run player dies because of collision with obstacle");
 			//SnakeGame.instance_.moveJRBackward();
 			//player_.pos_.x += (10 + other.collisionMask_.getMaxX() - player.collisionMask_.getMinX());
-			player_.speed_ = new Vector2f(30f, 0.0f);
+			player_.speed_ = new Vector2f(30f, 30.0f);
 			
 			if (!sludgeSound_.playing()) {
 				sludgeSound_.play();

@@ -163,7 +163,7 @@ public class SnakeGame implements BaseSubGame {
 			
 			if (tiles_[x][y] instanceof SnakeTileEmpty) {
 				Rectangle rect = new Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-				switch (rand.nextInt(8)) {
+				switch (rand.nextInt(6)) {
 				case 0:
 					tiles_[x][y] = new SnakeTileFood(x, y, rect);
 					break;
@@ -259,7 +259,7 @@ public class SnakeGame implements BaseSubGame {
 		int predecessors = countPredecessors(curPart);
 		//System.out.println("before: succ: " + successors + " predec: " + predecessors);
 		
-		int moveBack = (int)(successors / 2.f + 0.5f); 
+		int moveBack = (int)((successors + predecessors) / 4.f + 0.5f); 
 		if (moveBack <= 0) {
 			moveBack = 1;
 		}

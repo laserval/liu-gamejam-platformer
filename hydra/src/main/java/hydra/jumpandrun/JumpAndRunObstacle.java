@@ -4,6 +4,7 @@ package hydra.jumpandrun;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -62,7 +63,18 @@ public class JumpAndRunObstacle extends JumpAndRunEntity {
 			collisionMask_ = new Rectangle(0, 0, 130, 120);
 		} else if (type.equals("rat")) {
 			sprite_ = ratAnim;
-			collisionMask_ = new Rectangle(0, 0, 145, 130);
+			// collisionMask_ = new Rectangle(0, 0, 145, 130);
+			
+			Polygon poly = new Polygon();
+			// 70/12 are start pixels
+			poly.addPoint(0, 0);
+			poly.addPoint(100, 0);
+			poly.addPoint(100, 50);
+			poly.addPoint(145, 90);
+			poly.addPoint(150, 138);
+			poly.addPoint(0, 138);
+			
+			collisionMask_ = poly;
 		} else if (type.equals("chili")) {
 			sprite_ = chiliAnim;
 			collisionMask_ = new Rectangle(0, 0, sprite_.getWidth(), sprite_.getHeight());

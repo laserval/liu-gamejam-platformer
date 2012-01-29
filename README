@@ -1,0 +1,17 @@
+You need to install maven to compile the game. 
+After that, execute "mvn clean install" in the folder with pom.xml in it and use the provided scripts to start the game. 
+
+Jump & Run works uses WAD
+Snake uses cursor keys
+
+
+Target of the game:
+====================
+
+Apple:
+-------
+The apple wants to reach the snake's mouth (i.e. running to the right of the game window). Whenever he touches the right edge, it moves forward inside of the snake. The distance moved forward is always half of the total distance to the snake's mouth. If the apple touches the left of the screen, it falls back one quarter of the total length of the snake. 
+
+Snake:
+-------
+Digest the apple completely. If you eat something, obstacles will appear in the apple's way in the bottom part of the screen. Also, for each food item you will grow one tile behind and one in front of the apple. Stick around long enough for the apple to make critical mistakes, and try to pile up obstacles in front of the apple.
