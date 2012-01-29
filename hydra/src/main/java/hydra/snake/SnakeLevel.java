@@ -10,7 +10,7 @@ import java.util.Random;
 public class SnakeLevel {
 	private static Random rand_ = new Random();
 
-	public static SnakeTileSnakeHead initBasicLevel(SnakeTile[][] tiles, int width, int height, int tileSize) {
+	public static SnakeTileSnakeHead initBasicLevel(SnakeTile[][] tiles, int width, int height, int tileSize, int numFood) {
 		// create walls and food
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -36,13 +36,6 @@ public class SnakeLevel {
 				} else if(x == (width - 1)){
 					// Right
 					tiles[x][y] = new SnakeTileWallRight(x, y, rect);
-
-				} else if (rand_.nextInt(80) == 27) {
-					if (rand_.nextInt(2) == 1){ 
-						tiles[x][y] = new SnakeTileFood(x, y, rect);
-					} else {
-						tiles[x][y] = new SnakeTileRat(x, y, rect);
-					}
 				} else {
 					tiles[x][y] = new SnakeTileEmpty(x, y, rect);
 				}
@@ -113,6 +106,11 @@ public class SnakeLevel {
 		SnakeTileSnakeHead head = new SnakeTileSnakeHead(x, y, headRect, last);
 		tiles[x][y] = head;
 		last.predecessor_ = head;
+		
+		
+		for (int i = 0; i < numFood; i++) {
+			SnakeGame.instance_.addFoodItem();
+		}
 
 		return head;
 	}

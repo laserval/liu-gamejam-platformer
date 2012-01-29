@@ -25,6 +25,8 @@ public class SnakeGame implements BaseSubGame {
 	public static final int DIRECTION_UP = 2;
 	public static final int DIRECTION_DOWN = 3;
 	
+	public static final int NUM_FOOD = 4;
+	
 	private int width_;
 	private int height_;
 	
@@ -43,6 +45,7 @@ public class SnakeGame implements BaseSubGame {
 	private Music backgroundMusic;
 	
 	Sound fallBackSound_;
+	Sound advanceSound_;
 	
 	Random rand = new Random();
 	
@@ -57,6 +60,12 @@ public class SnakeGame implements BaseSubGame {
 		
 		try {
 			fallBackSound_ = new Sound("ScreamShort.ogg");
+		} catch(SlickException e) {
+			System.out.println(e);
+		}
+		
+		try {
+			advanceSound_ = new Sound("InsaneLaughShort.ogg");
 		} catch(SlickException e) {
 			System.out.println(e);
 		}
@@ -112,7 +121,7 @@ public class SnakeGame implements BaseSubGame {
 		
 		tiles_ = new SnakeTile[width_][height_];
 		
-		snakeHead_ = SnakeLevel.initBasicLevel(tiles_, width_, height_, TILE_SIZE);
+		snakeHead_ = SnakeLevel.initBasicLevel(tiles_, width_, height_, TILE_SIZE, NUM_FOOD);
 	}
 	
 	public void moveTile(SnakeTile tile, int x, int y) {
@@ -143,16 +152,28 @@ public class SnakeGame implements BaseSubGame {
 		snakeGrowth_ += length;
 		JumpAndRunGame.instance_.spawnObject(type);
 		
-		while (true) {
+		addFoodItem();
+	}
+	
+	public void addFoodItem() {
+		int maxtries = (width_ * height_) * 2;
+		for (int i = 0; i < maxtries; ++i) {
 			int x = rand.nextInt(width_);
 			int y = rand.nextInt(height_);
 			
 			if (tiles_[x][y] instanceof SnakeTileEmpty) {
 				Rectangle rect = new Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-				if (rand.nextInt(2) == 1) {
+				switch (rand.nextInt(3)) {
+				default:
+				case 0:
 					tiles_[x][y] = new SnakeTileFood(x, y, rect);
-				} else {
+					break;
+				case 1:
 					tiles_[x][y] = new SnakeTileRat(x, y, rect);
+					break;
+				case 2:
+					tiles_[x][y] = new SnakeTileChili(x, y, rect);
+					break;
 				}
 				
 				break;
@@ -179,6 +200,7 @@ public class SnakeGame implements BaseSubGame {
 	
 	
 	public void moveJRForward() {
+		advanceSound_.play();
 		SnakeTileSnake curPart = snakeHead_;
 		while (curPart != null && !(curPart instanceof SnakeTileSnakeBodyJR)) {
 			curPart = curPart.successor_;
@@ -188,6 +210,8 @@ public class SnakeGame implements BaseSubGame {
 			System.err.println("J&R snake body part not found!");
 			System.exit(1);
 		}
+		
+		System.out.println("succ: " + countSuccessors(curPart) + " predec: " + countPredecessors(curPart));
 		
 		SnakeTileSnake predec = curPart.predecessor_;
 		if (predec instanceof SnakeTileSnakeHead) {
@@ -215,6 +239,8 @@ public class SnakeGame implements BaseSubGame {
 		} else {
 		}
 		
+		System.out.println("succ: " + countSuccessors(curPart) + " predec: " + countPredecessors(curPart));
+		
 		SnakeTileSnake succ = curPart.successor_;
 		if (succ == null || succ.successor_ == null) {
 			System.out.println("J&R player reached snake ass!");
@@ -225,22 +251,65 @@ public class SnakeGame implements BaseSubGame {
 	}
 	
 	public void switchBodyParts(SnakeTileSnake front, SnakeTileSnake back) {
-		front.predecessor_.successor_ = back;
+		// special case if they are adjacent
+		if (front.successor_ == back) {
+			front.predecessor_.successor_ = back;
 		
-		if (back.successor_ != null) {
-			back.successor_.predecessor_ = front;
+			if (back.successor_ != null) {
+				back.successor_.predecessor_ = front;
+			}
+			
+			SnakeTileSnake tmp = back.successor_;
+			back.successor_ = front;
+			back.predecessor_ = front.predecessor_;
+			
+			front.predecessor_ = back;
+			front.successor_ = tmp;
+		} else {
+			SnakeTileSnake frontSuc = front.successor_;
+			SnakeTileSnake frontPre = front.predecessor_;
+			SnakeTileSnake backSuc = back.successor_;
+			SnakeTileSnake backPre = back.predecessor_;
+			
+			
+			front.successor_ = backSuc;
+			if (front.successor_ != null) {
+				front.successor_.predecessor_ = front;
+			}
+			front.predecessor_ = backPre;
+			front.predecessor_.successor_ = front;
+			
+			
+			back.successor_ = frontSuc;
+			if (back.successor_ != null) {
+				back.successor_.predecessor_ = back;
+			}
+			back.predecessor_ = frontPre;
+			back.predecessor_.successor_ = back;
 		}
 		
-		SnakeTileSnake tmp = back.successor_;
-		back.successor_ = front;
-		back.predecessor_ = front.predecessor_;
-		
-		front.predecessor_ = back;
-		front.successor_ = tmp;
 		
 		int tmpX = front.x_;
 		int tmpY = front.y_;
 		moveTile(front, back.x_, back.y_);
 		moveTile(back, tmpX, tmpY);
+	}
+	
+	public int countSuccessors(SnakeTileSnake origin) {
+		int count = -1; // tail does not count
+		while (origin.successor_ != null) {
+			origin = origin.successor_;
+			count += 1;
+		}
+		return count;
+	}
+	
+	public int countPredecessors(SnakeTileSnake origin) {
+		int count = -1; // head does not count
+		while (origin.predecessor_ != null) {
+			origin = origin.predecessor_;
+			count += 1;
+		}
+		return count;
 	}
 }
