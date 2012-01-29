@@ -9,19 +9,20 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
 public class SnakeTileEmpty extends SnakeTile {
-	Image[] tilesImages = new Image[1];
-	Animation tilesAnim = new Animation(false);
+	static Animation tilesAnim = new Animation(false);
 
 
 	public SnakeTileEmpty(int x, int y, Rectangle rect) {
 		super(x, y, rect);
-		
+	}
+	
+	static {
+		Image[] tilesImages = new Image[1];
 		// Load background for Snake
 		try {
 			tilesImages[0] = new Image("bg_tile.jpg");
 		} catch(SlickException e) {
 			System.out.println(e);
-			return;
 		}
 
 		tilesAnim.addFrame(tilesImages[0], 1);

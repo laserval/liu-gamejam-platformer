@@ -180,8 +180,12 @@ public class SnakeGame implements BaseSubGame {
 		}
 	}
 	
-	public boolean shouldSnakeGrow() {
-		return snakeGrowth_ > 0;
+	public boolean shouldSnakeGrowFront() {
+		return snakeGrowth_ == 1;
+	}
+	
+	public boolean shouldSnakeGrowBack() {
+		return snakeGrowth_ == 2;
 	}
 	
 	public void onSnakeGrown() {
@@ -212,7 +216,7 @@ public class SnakeGame implements BaseSubGame {
 		
 		int successors = countSuccessors(curPart);
 		int predecessors = countPredecessors(curPart);
-		System.out.println("before: succ: " + successors + " predec: " + predecessors);
+		//System.out.println("before: succ: " + successors + " predec: " + predecessors);
 		
 		int moveForward = (int)(predecessors / 2.f + 0.5f); 
 		if (moveForward <= 0) {
@@ -231,7 +235,7 @@ public class SnakeGame implements BaseSubGame {
 			switchBodyParts(pre, curPart);
 		}
 		
-		System.out.println("after: succ: " + countSuccessors(curPart) + " predec: " + countPredecessors(curPart));
+		//System.out.println("after: succ: " + countSuccessors(curPart) + " predec: " + countPredecessors(curPart));
 	}
 	
 	public void moveJRBackward() {
@@ -253,7 +257,7 @@ public class SnakeGame implements BaseSubGame {
 		
 		int successors = countSuccessors(curPart);
 		int predecessors = countPredecessors(curPart);
-		System.out.println("before: succ: " + successors + " predec: " + predecessors);
+		//System.out.println("before: succ: " + successors + " predec: " + predecessors);
 		
 		int moveBack = (int)(successors / 2.f + 0.5f); 
 		if (moveBack <= 0) {
@@ -272,7 +276,7 @@ public class SnakeGame implements BaseSubGame {
 			switchBodyParts(curPart, succ);
 		}
 		
-		System.out.println("after: succ: " + countSuccessors(curPart) + " predec: " + countPredecessors(curPart));
+		//System.out.println("after: succ: " + countSuccessors(curPart) + " predec: " + countPredecessors(curPart));
 	}
 	
 	public void switchBodyParts(SnakeTileSnake front, SnakeTileSnake back) {

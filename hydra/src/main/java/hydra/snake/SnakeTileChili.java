@@ -12,26 +12,26 @@ public class SnakeTileChili extends SnakeTile {
 	//private int volume = 10;
 	
 	static Sound fx;
-	Image[] ratImages = new Image[1];
-	Animation ratAnim = new Animation(false);
+	static Animation ratAnim = new Animation(false);
 	
 	
 	public SnakeTileChili(int x, int y, Rectangle rect) {
 		super(x, y, rect);
+	}
 		
+	static {
 		try {
 			fx = new Sound("SnakeEatShort.ogg");
 		} catch(SlickException e) {
 			System.out.println(e);
-			return;
 		}
 
 		// Load apples
+		Image[] ratImages = new Image[1];
 		try {
 			ratImages[0] = new Image("cili_tile.jpg");
 		} catch(SlickException e) {
 			System.out.println(e);
-			return;
 		}
 		
 		ratAnim.addFrame(ratImages[0], 1);

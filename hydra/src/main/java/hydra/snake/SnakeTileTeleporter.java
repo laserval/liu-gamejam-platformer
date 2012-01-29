@@ -9,20 +9,21 @@ import org.newdawn.slick.geom.Rectangle;
 
 public class SnakeTileTeleporter extends SnakeTile {
 	private SnakeTileTeleporter other_;
-	Image[] teleportImages = new Image[1];
-	Animation teleportAnim = new Animation(false);
+	static Animation teleportAnim = new Animation(false);
 	
 	public SnakeTileTeleporter(int x, int y, Rectangle rect) {
 		super(x, y, rect);
-		
+	}
+	
+	static {
+		Image[] wallImages = new Image[1];
 		try {
-			teleportImages[0] = new Image("portal.jpg");
+			wallImages[0] = new Image("portal.jpg");
 		} catch(SlickException e) {
 			System.out.println(e);
-			return;
 		}
 
-		teleportAnim.addFrame(teleportImages[0], 1);
+		teleportAnim.addFrame(wallImages[0], 1);
 	}
 	
 	public void render(Graphics g) {

@@ -11,27 +11,27 @@ import org.newdawn.slick.geom.Rectangle;
 public class SnakeTileFood extends SnakeTile {
 	//private int volume = 10;
 	
-	Sound fx;
-	Image[] applesImages = new Image[1];
-	Animation appleAnim = new Animation(false);
+	static Sound fx;
+	static Animation appleAnim = new Animation(false);
 	
 	
 	public SnakeTileFood(int x, int y, Rectangle rect) {
 		super(x, y, rect);
-		
+	}
+	
+	static {
 		try {
 			fx = new Sound("SnakeEatShort.ogg");
 		} catch(SlickException e) {
 			System.out.println(e);
-			return;
 		}
 
 		// Load apples
+		Image[] applesImages = new Image[1];
 		try {
 			applesImages[0] = new Image("apple_tile.jpg");
 		} catch(SlickException e) {
 			System.out.println(e);
-			return;
 		}
 		
 		appleAnim.addFrame(applesImages[0], 1);

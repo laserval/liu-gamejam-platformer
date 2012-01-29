@@ -75,6 +75,7 @@ public class App extends BasicGame {
 	
 	public void init(GameContainer gc) {
 		initStartScreen(gc);
+		StartScreen.instance_.initScreen = true;
 	}
 	
 	public void initSubGames(GameContainer gc) {

@@ -9,11 +9,13 @@ import org.newdawn.slick.geom.Rectangle;
 
 public class SnakeTileSnakeHead extends SnakeTileSnake {
 	private int headDirection = 2;
-	private Animation[] headAnim = new Animation[4];
+	private static Animation[] headAnim = new Animation[4];
 	
 	public SnakeTileSnakeHead(int x, int y, Rectangle rect, SnakeTileSnake successor) {
 		super(x, y, rect, successor);
-
+	}
+	
+	static {
 		for (int i = 0; i < 4; i++) {
 			headAnim[i] = new Animation(false);
 		}
@@ -23,7 +25,7 @@ public class SnakeTileSnakeHead extends SnakeTileSnake {
 		loadAnimation(3, "snake_tile_head_down.jpg");
 	}
 
-	public void loadAnimation(int index, String name) {
+	public static void loadAnimation(int index, String name) {
 		Image[] headImages = new Image[1];
 
 		// Load background for Snakes head
@@ -31,9 +33,6 @@ public class SnakeTileSnakeHead extends SnakeTileSnake {
 			headImages[0] = new Image(name);
 		} catch(SlickException e) {
 			System.out.println(e);
-			System.exit(1);
-			//return;
-			
 		}
 		
 		headAnim[index].addFrame(headImages[0], 1);
@@ -44,7 +43,17 @@ public class SnakeTileSnakeHead extends SnakeTileSnake {
 	}
 
 	public void move(int direction) {
-		moveRecursive();
+		if (SnakeGame.instance_.shouldSnakeGrowFront()) {
+			SnakeTileSnakeBody newTile = new SnakeTileSnakeBody(x_, y_, clipRect_, successor_, true);
+			newTile.predecessor_ = this;
+			newTile.successor_ = successor_;
+			successor_.predecessor_ = newTile;
+			successor_ = newTile;
+			SnakeGame.instance_.moveTile(newTile, x_, y_);
+			SnakeGame.instance_.onSnakeGrown();
+		} else {
+			moveRecursive();
+		}
 		
 		headDirection = direction;
 		switch (direction) {
