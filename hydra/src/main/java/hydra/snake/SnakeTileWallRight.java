@@ -8,17 +8,18 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
 public class SnakeTileWallRight extends SnakeTile {
-	Image[] wallImages = new Image[1];
-	Animation wallAnim = new Animation(false);
+	static Animation wallAnim = new Animation(false);
 
 	public SnakeTileWallRight(int x, int y, Rectangle rect) {
 		super(x, y, rect);
-
+	}
+	
+	static {
+		Image[] wallImages = new Image[1];
 		try {
 			wallImages[0] = new Image("border_tile_right.jpg");
 		} catch(SlickException e) {
 			System.out.println(e);
-			return;
 		}
 
 		wallAnim.addFrame(wallImages[0], 1);
