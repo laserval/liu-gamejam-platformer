@@ -20,7 +20,8 @@ public class StartScreen {
 	public static StartScreen instance_;
 	
 	private static Image initImage;
-	private static Image gameOverImage;
+	private static Image gameOverAppleImage;
+	private static Image gameOverSnakeImage;
 	
 	static {
 		try {
@@ -30,7 +31,13 @@ public class StartScreen {
 		}
 		
 		try {
-			gameOverImage = new Image("game_over.jpg");
+			gameOverAppleImage = new Image("game_over_apple.jpg");
+		} catch(SlickException e) {
+			System.out.println(e);
+		}
+		
+		try {
+			gameOverSnakeImage = new Image("game_over_snake.jpg");
 		} catch(SlickException e) {
 			System.out.println(e);
 		}
@@ -45,8 +52,10 @@ public class StartScreen {
 	public void render(GameContainer gc, Graphics g) {
 		if (initScreen) {
 			initImage.draw(0, 0);
+		} else if (App.instance_.snakeWins_) {
+			gameOverSnakeImage.draw(0, 0);
 		} else {
-			gameOverImage.draw(0, 0);
+			gameOverAppleImage.draw(0, 0);
 		}
 	}
 	

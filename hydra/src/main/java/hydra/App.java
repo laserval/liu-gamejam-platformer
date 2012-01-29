@@ -27,6 +27,7 @@ public class App extends BasicGame {
 	
 	
 	private StartScreen startScreen_;
+	public boolean snakeWins_ = true;
 	
 	public App() {
 		super("<insert awesome name here>");
@@ -93,8 +94,10 @@ public class App extends BasicGame {
 	
 	public void gameOver(boolean snakeWins) {
 		if (snakeWins) {
+			snakeWins_ = true;
 			System.out.println("Snake wins!");
 		} else {
+			snakeWins_ = false;
 			System.out.println("Jump&run wins!");
 		}
 		
