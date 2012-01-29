@@ -83,12 +83,12 @@ public class SnakeLevel {
 
 		// create snake
 		int y = 5;
-		int x = 7;
+		int x = 6;
 		SnakeTileSnake last = null;
-		for (; x < 15; x++) {
+		for (; x < 18; x++) {
 			Rectangle rect = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
 			SnakeTileSnake current;
-			if (x == 10) {
+			if (x == 14) {
 				current = new SnakeTileSnakeBodyJR(x, y, rect, last);
 			} else {
 				current = new SnakeTileSnakeBody(x, y, rect, last, true);

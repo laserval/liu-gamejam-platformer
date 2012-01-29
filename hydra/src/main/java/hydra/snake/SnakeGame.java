@@ -163,15 +163,14 @@ public class SnakeGame implements BaseSubGame {
 			
 			if (tiles_[x][y] instanceof SnakeTileEmpty) {
 				Rectangle rect = new Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-				switch (rand.nextInt(3)) {
-				default:
+				switch (rand.nextInt(8)) {
 				case 0:
 					tiles_[x][y] = new SnakeTileFood(x, y, rect);
 					break;
 				case 1:
 					tiles_[x][y] = new SnakeTileRat(x, y, rect);
 					break;
-				case 2:
+				default:
 					tiles_[x][y] = new SnakeTileChili(x, y, rect);
 					break;
 				}
@@ -211,15 +210,28 @@ public class SnakeGame implements BaseSubGame {
 			System.exit(1);
 		}
 		
-		System.out.println("succ: " + countSuccessors(curPart) + " predec: " + countPredecessors(curPart));
+		int successors = countSuccessors(curPart);
+		int predecessors = countPredecessors(curPart);
+		System.out.println("before: succ: " + successors + " predec: " + predecessors);
 		
-		SnakeTileSnake predec = curPart.predecessor_;
-		if (predec instanceof SnakeTileSnakeHead) {
+		int moveForward = (int)(predecessors / 2.f + 0.5f); 
+		if (moveForward <= 0) {
+			moveForward = 1;
+		}
+		
+		SnakeTileSnake pre = curPart; 
+		for (int i = 0; i < moveForward && pre != null; ++i) {
+			pre = pre.predecessor_;
+		}
+		
+		if (pre == null || pre instanceof SnakeTileSnakeHead) {
 			System.out.println("J&R player reached snake head!");
 			App.instance_.gameOver(false);
 		} else {
-			switchBodyParts(predec, curPart);
+			switchBodyParts(pre, curPart);
 		}
+		
+		System.out.println("after: succ: " + countSuccessors(curPart) + " predec: " + countPredecessors(curPart));
 	}
 	
 	public void moveJRBackward() {
@@ -239,15 +251,28 @@ public class SnakeGame implements BaseSubGame {
 		} else {
 		}
 		
-		System.out.println("succ: " + countSuccessors(curPart) + " predec: " + countPredecessors(curPart));
+		int successors = countSuccessors(curPart);
+		int predecessors = countPredecessors(curPart);
+		System.out.println("before: succ: " + successors + " predec: " + predecessors);
 		
-		SnakeTileSnake succ = curPart.successor_;
+		int moveBack = (int)(successors / 2.f + 0.5f); 
+		if (moveBack <= 0) {
+			moveBack = 1;
+		}
+		
+		SnakeTileSnake succ = curPart; 
+		for (int i = 0; i < moveBack && succ != null; ++i) {
+			succ = succ.successor_;
+		}
+		
 		if (succ == null || succ.successor_ == null) {
 			System.out.println("J&R player reached snake ass!");
 			App.instance_.gameOver(true);
 		} else {
 			switchBodyParts(curPart, succ);
 		}
+		
+		System.out.println("after: succ: " + countSuccessors(curPart) + " predec: " + countPredecessors(curPart));
 	}
 	
 	public void switchBodyParts(SnakeTileSnake front, SnakeTileSnake back) {
