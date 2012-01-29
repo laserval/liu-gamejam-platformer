@@ -42,8 +42,11 @@ public class JumpAndRunGame implements BaseSubGame {
 	private int freezePhysicsTimeout_ = 0;
 	private int freezePhysicsInterval_ = 1000;
 	public boolean reverseScrolling_ = false;
-
-
+	
+	Animation snakeRSideAnim, snakeLSideAnim;
+	
+	private Sound sludgeSound_;
+	
 	public JumpAndRunGame() {
 		instance_ = this;
 	}
@@ -56,6 +59,9 @@ public class JumpAndRunGame implements BaseSubGame {
 		}
 
 		player_.draw(g, clip);
+		
+		snakeLSideAnim.draw(0, 400);
+		snakeRSideAnim.draw(900 - snakeLSideAnim.getWidth(), 400);
 	}
 
 	public void update(GameContainer gc, int delta) {
@@ -147,14 +153,20 @@ public class JumpAndRunGame implements BaseSubGame {
 		player_.move(inAir, delta);
 
 		// Find collisions for this entity
+		boolean isCollision = false;
 		for(JumpAndRunEntity otherEntity : entities_) {
 			if (!player_.equals(otherEntity)) {
 				// System.out.println("Checking collisions between player and " + otherEntity);
 				if (player_.collidesWith(otherEntity)) {
-					System.out.println("Collision!");
+					//System.out.println("Collision!");
 					handleCollision(player_, otherEntity);
+					isCollision = true;
 				}
 			}
+		}
+		
+		if (!isCollision && sludgeSound_.playing()) {
+			sludgeSound_.stop();
 		}
 
 		// Check if outside world boundaries
@@ -193,7 +205,12 @@ public class JumpAndRunGame implements BaseSubGame {
 			jumpfx = new Sound("Jump.ogg");
 		} catch(SlickException e) {
 			System.out.println(e);
-			return;
+		}
+		
+		try {
+			sludgeSound_ = new Sound("sludge.ogg");
+		} catch(SlickException e) {
+			System.out.println(e);
 		}
 
 		gravity_ = new Vector2f(0.0f, 1000.0f);
@@ -230,26 +247,36 @@ public class JumpAndRunGame implements BaseSubGame {
 
 		entities_.add(player_);
 
-		// Load background for RIGHT side of snakeskin
-		
-		/*
+		// Load background for side of snakeskin
 		Image[] snakeRSideImages = new Image[1];
 		try {
 			snakeRSideImages[0] = new Image("tunnel_end.png");
 		} catch(SlickException e) {
 			System.out.println(e);
+		}
+
+		snakeRSideAnim = new Animation(false);
+		snakeRSideAnim.addFrame(snakeRSideImages[0], 1);
+		
+		Image[] snakeLSideImages = new Image[1];
+		try {
+			snakeLSideImages[0] = new Image("tunnel_begining.png");
+		} catch(SlickException e) {
+			System.out.println(e);
 			return;
 		}
 
-		Animation snakeRSideAnim = new Animation(false);
-		snakeRSideAnim.addFrame(snakeRSideImages[0], 1);
-		*/
+		snakeLSideAnim = new Animation(false);
+		snakeLSideAnim.addFrame(snakeLSideImages[0], 1);
+		
 
 		// add barrier
 		JumpAndRunEntityInvisibleFixedBarrier barrier = new JumpAndRunEntityInvisibleFixedBarrier(
 				new Vector2f(world_.getX() + world_.getWidth()/2, world_.getY() - 5), 
 				new Rectangle(0, 0, world_.getWidth(), 20));
 		entities_.add(barrier);
+		
+		spawnObject("apple");
 	}
 
 	private void handleCollision(JumpAndRunPlayer player, JumpAndRunEntity other) {
@@ -280,9 +307,14 @@ public class JumpAndRunGame implements BaseSubGame {
 
 			player_.speed_.set(0, 0);
 		} else {
-			System.out.println("Jump&Run player dies because of collision with obstacle");
-			SnakeGame.instance_.moveJRBackward();
-			player_.pos_.x += (10 + other.collisionMask_.getMaxX() - player.collisionMask_.getMinX());
+			//System.out.println("Jump&Run player dies because of collision with obstacle");
+			//SnakeGame.instance_.moveJRBackward();
+			//player_.pos_.x += (10 + other.collisionMask_.getMaxX() - player.collisionMask_.getMinX());
+			player_.speed_ = new Vector2f(30f, 0.0f);
+			
+			if (!sludgeSound_.playing()) {
+				sludgeSound_.play();
+			}
 		}
 	}
 
