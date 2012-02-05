@@ -15,11 +15,11 @@ public class App extends BasicGame {
 	
 	boolean exitRequested_ = false;
 	
-	private SnakeGame snakeGame_ = new SnakeGame();
+	//private SnakeGame snakeGame_ = new SnakeGame();
 	private JumpAndRunGame jumpAndRunGame_ = new JumpAndRunGame();
 	
-	private Rectangle snakeRectangle_ = new Rectangle(0, 0, 900, 400);
-	private Rectangle jumpAndRunRectangle_ = new Rectangle(0, 400, 900, 300);
+	//private Rectangle snakeRectangle_ = new Rectangle(0, 0, 900, 400);
+	private Rectangle jumpAndRunRectangle_ = new Rectangle(0, 0, 640, 480);
 	
 	public boolean showStartScreenNext_ = true;
 	private boolean showStartScreen_ = true;
@@ -35,7 +35,7 @@ public class App extends BasicGame {
 	}
 	
     public static void main(String[] args) throws Exception {
-		AppGameContainer container = new AppGameContainer(new App(), 900, 700, false);
+		AppGameContainer container = new AppGameContainer(new App(), 640, 480, false);
 		container.setTargetFrameRate(60);
 		container.start();
     }
@@ -44,7 +44,7 @@ public class App extends BasicGame {
 		if (showStartScreen_) {
 			startScreen_.render(gc, g);
 		} else {
-			snakeGame_.render(gc, g, snakeRectangle_);
+			//snakeGame_.render(gc, g, snakeRectangle_);
 			jumpAndRunGame_.render(gc, g, jumpAndRunRectangle_);
 		}
 	}
@@ -67,7 +67,7 @@ public class App extends BasicGame {
 				// just switched to the games
 				initSubGames(gc);
 			}
-			snakeGame_.update(gc, delta);
+			//snakeGame_.update(gc, delta);
 			jumpAndRunGame_.update(gc, delta);
 		}
 		
@@ -80,10 +80,10 @@ public class App extends BasicGame {
 	}
 	
 	public void initSubGames(GameContainer gc) {
-		snakeGame_ = new SnakeGame();
+		//snakeGame_ = new SnakeGame();
 		jumpAndRunGame_ = new JumpAndRunGame();
 		
-		snakeGame_.init(gc, snakeRectangle_);
+		//snakeGame_.init(gc, snakeRectangle_);
 		jumpAndRunGame_.init(gc, jumpAndRunRectangle_);
 	}
 	

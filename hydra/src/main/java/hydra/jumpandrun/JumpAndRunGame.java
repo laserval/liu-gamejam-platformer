@@ -95,7 +95,7 @@ public class JumpAndRunGame implements BaseSubGame {
 		scrollPixelOverlap_ -= curScroll;
 
 		ArrayList<JumpAndRunEntity> deleteList = new ArrayList();
-
+		
 		// scrolling
 		for(JumpAndRunEntity entity : entities_) {
 			if (entity.pos_ != null && entity.pos_.x < -1000) {
@@ -132,7 +132,7 @@ public class JumpAndRunGame implements BaseSubGame {
 
 			return;
 		}
-
+		
 		Vector2f startPos = player_.getPosition();
 
 		boolean inAir = player_.getPosition().y < world_.getY() + world_.getHeight();
@@ -174,6 +174,7 @@ public class JumpAndRunGame implements BaseSubGame {
 			//System.out.println("outside");
 
 			// if player reached one of the sides, move lump inside snake
+			/*
 			if (player_.getPosition().x < world_.getX()) {
 				// left side
 				SnakeGame.instance_.moveJRBackward();
@@ -185,7 +186,7 @@ public class JumpAndRunGame implements BaseSubGame {
 				freezePhysicsTimeout_ = freezePhysicsInterval_;
 				scrollPixelsPerSecond_ *= 4;
 			}
-
+			*/
 			// Put at closest position inside boundary
 			Vector2f newPos = new Vector2f(player_.getPosition());
 			Vector2f newSpeed = new Vector2f(player_.getSpeed());
